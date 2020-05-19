@@ -6,6 +6,11 @@
       "es2018",
       "esnext.asynciterable"
     ],
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   }
