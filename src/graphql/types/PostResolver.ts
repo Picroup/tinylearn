@@ -1,5 +1,8 @@
-import { Resolver, Query } from "type-graphql";
+import { PostEntity } from './../../entity/PostEntity';
+import { Context } from './../../app/context';
+import { Resolver, Query, Mutation, Arg, Ctx } from "type-graphql";
 import { Post } from "./Post";
+import { UserEntity } from '../../entity/UserEntity';
 
 @Resolver(Post)
 class PostResolver {
@@ -19,5 +22,19 @@ class PostResolver {
       },
     ];
     return posts;
+  }
+
+  @Mutation(returns => String)
+  async createPost(
+    @Arg('content') content: string,
+    @Ctx() { connection }: Context,
+  ): Promise<string> {
+    const userRepository = connection.getRepository(UserEntity);
+    const user = await userRepository.findOne({ username: "beeth0ven" });
+    if (user == null) throw new Error('用户不存在');
+
+    const postRepository = connection.getRepository(PostEntity);
+    const post = await postRepository.save({ content, userId: user.id });
+    return post.id;
   }
 }
