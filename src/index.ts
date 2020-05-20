@@ -1,55 +1,39 @@
 import "reflect-metadata"
-import { ObjectType, Field, ID, Resolver, Query, buildSchema } from "type-graphql";
+import { Context } from './app/context';
+import { PORT } from './app/env';
+import { buildSchema } from "type-graphql";
 import { ApolloServer } from "apollo-server";
+import { createConnection } from 'typeorm';
 
-@ObjectType()
-class Post {
 
-  @Field(type => ID)
-  id: string;
-
-  @Field()
-  title: string;
-
-  @Field()
-  created: Date;
-}
-
-@Resolver(Post) 
-class PostResolver {
-
-  @Query(returns => [Post])
-  async posts(): Promise<Post[]> {
-    const posts = [
-      {
-        id: '0',
-        title: 'Flutter 开发演示',
-        created: new Date()
-      },
-      {
-        id: '0',
-        title: 'Node 开发演示',
-        created: new Date()
-      },
-    ];
-    return posts;
-  }
-}
 
 async function main() {
 
-  const schema = await buildSchema({
-    resolvers: [PostResolver]
-  });
+  try {
 
-  const server = new ApolloServer({
-    schema,
-    playground: true
-  });
+    const connection = await createConnection();
 
-  const { url } = await server.listen(4004);
+    const schema = await buildSchema({
+      resolvers: [__dirname + "/graphql/types/**/*.{ts,js}"],
+      dateScalarMode: 'timestamp'
+    });
 
-  console.log(`Server is running, GraphQL Playground available at ${url}`);
+    const context: Context = {
+      connection
+    }
+
+    const server = new ApolloServer({
+      schema,
+      context,
+      playground: true
+    });
+
+    const { url } = await server.listen(PORT);
+
+    console.log(`Server is running, GraphQL Playground available at ${url}`);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 main();
