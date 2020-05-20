@@ -1,12 +1,14 @@
+import { SessionInfo } from './SessionInfo';
 import { VerifyCodeEntity } from './../../entity/VerifyCodeEntity';
 import { UserEntity } from './../../entity/UserEntity';
-import { Context } from './../../app/context';
+import { AppContext } from './../../app/context';
 import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
 import { User } from './User';
 import { createVerifyCode } from '../../functional/verifycode/createVerifyCode';
 import { verifyCodeExpiredDate } from '../../functional/verifycode/verifyCodeExpiredDate';
 import { verifyCode } from '../../functional/verifycode/verifyCode';
 import { v4 as uuidv4 } from "uuid";
+import { sessionInfo } from '../../functional/sessionInfo';
 
 @Resolver(User)
 export class UserResolver {
@@ -14,7 +16,7 @@ export class UserResolver {
   @Mutation(returns => String)
   async getVerifyCode(
     @Arg('phone') phone: string,
-    @Ctx() { connection }: Context
+    @Ctx() { connection }: AppContext
   ): Promise<string> {
     const verifyCodeRepository = connection.getRepository(VerifyCodeEntity);
     const code = createVerifyCode();
@@ -24,26 +26,24 @@ export class UserResolver {
     return code;
   }
 
-  @Mutation(returns => User)
+  @Mutation(returns => SessionInfo)
   async loginOrRegister(
     @Arg('phone') phone: string,
     @Arg('code') code: string,
-    @Ctx() { connection }: Context
-  ): Promise<User> {
+    @Ctx() { connection }: AppContext
+  ): Promise<SessionInfo> {
     const userRepository = connection.getRepository(UserEntity);
     const verifyCodeRepository = connection.getRepository(VerifyCodeEntity);
     await verifyCode(verifyCodeRepository, phone, code, new Date());
 
     const user = await userRepository.findOne({ phone });
-    if (user != null) return user;
+    if (user != null) return sessionInfo(user);
 
     const newUser = await userRepository.save({ 
       phone, 
       username: uuidv4(),
       hasSetUsername: false,
     });
-    return newUser;
+    return sessionInfo(newUser);
   }
-
-  
 }

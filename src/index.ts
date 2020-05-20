@@ -1,11 +1,11 @@
 import "reflect-metadata"
-import { Context } from './app/context';
+import { AppContext } from './app/context';
 import { PORT } from './app/env';
 import { buildSchema } from "type-graphql";
 import { ApolloServer } from "apollo-server";
+import { ContextFunction } from "apollo-server-core";
+import { ExpressContext } from "apollo-server-express/src/ApolloServer";
 import { createConnection } from 'typeorm';
-
-
 
 async function main() {
 
@@ -18,9 +18,10 @@ async function main() {
       dateScalarMode: 'timestamp'
     });
 
-    const context: Context = {
-      connection
-    }
+    const context: ContextFunction<ExpressContext, AppContext> = ({ req }: ExpressContext) => ({
+      connection,
+      headers: req.headers,
+    })
 
     const server = new ApolloServer({
       schema,
@@ -30,7 +31,7 @@ async function main() {
 
     const { url } = await server.listen(PORT);
 
-    console.log(`Server is running, GraphQL Playground available at ${url}`);
+    console.log(`GraphQL Playground available at ${url}`);
   } catch (error) {
     console.error(error);
   }
