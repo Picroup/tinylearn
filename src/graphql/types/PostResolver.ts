@@ -1,10 +1,18 @@
 import { authorization } from './../middlewares/Authorization';
 import { PostEntity } from './../../entity/PostEntity';
 import { AppContext } from './../../app/context';
-import { Resolver, Query, Mutation, Arg, Ctx, UseMiddleware } from "type-graphql";
+import { Resolver, Query, Mutation, Arg, Ctx, UseMiddleware, InputType, Field } from "type-graphql";
 import { Post } from "./Post";
-import { UserEntity } from '../../entity/UserEntity';
 import { getPayloadUserId } from '../../functional/token/tokenservice';
+import { Length } from 'class-validator';
+
+@InputType()
+class CreatePostInput {
+
+  @Field()
+  @Length(5, 100)
+  content: string;
+}
 
 @Resolver(Post)
 class PostResolver {
@@ -30,7 +38,7 @@ class PostResolver {
   @UseMiddleware(authorization)
   @Mutation(returns => String)
   async createPost(
-    @Arg('content') content: string,
+    @Arg('input') { content }: CreatePostInput,
     @Ctx() { connection, tokenPayload }: AppContext,
   ): Promise<string> {
     const userId = getPayloadUserId(tokenPayload);
