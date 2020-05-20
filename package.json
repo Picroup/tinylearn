@@ -12,6 +12,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/graphql": "14.0.7",
+    "@types/jsonwebtoken": "8.5.0",
     "@types/node": "12.12.39",
     "@types/uuid": "3.4.9",
     "ts-node": "8.10.1",
@@ -23,6 +24,7 @@
     "date-fns": "2.14.0",
     "dotenv": "8.2.0",
     "graphql": "14.6.0",
+    "jsonwebtoken": "8.5.1",
     "mysql": "2.18.1",
     "reflect-metadata": "0.1.13",
     "type-graphql": "0.17.6",
