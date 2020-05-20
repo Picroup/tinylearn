@@ -7,7 +7,12 @@ export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
   
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'datetime',
+    precision: 3,
+    default: () => 'CURRENT_TIMESTAMP(3)',
+    readonly: true,
+  })
   created: Date;
 
   @Column({ unique: true })
