@@ -19,22 +19,37 @@ class Post {
 class PostResolver {
 
   @Query(returns => [Post])
-  async allPosts(): Promise<Post[]> {
+  async posts(): Promise<Post[]> {
     return [
       {
         id: "0",
-        created: new Date(),
-        content: 'GraphQL | 一种为你的 API 而生的查询语言'
+        created: new Date(1590113714229),
+        content: '提供基于GraphQL API的数据查询及访问,「Hasura」获990万美元A轮...'
       },
       {
         id: "1",
-        created: new Date(),
-        content: 'GraphQL中文网™ | 一门致力于API的查询语言'
+        created: new Date(1590113824229),
+        content: '为什么GraphQL是API的未来'
       },
       {
         id: "2",
-        created: new Date(),
-        content: 'GraphQL 入门介绍 - 不负春光,努力生长 - 博客园'
+        created: new Date(1590113934229),
+        content: 'Netflix:我们为什么要将 GraphQL 引入前端架构?'
+      },
+      {
+        id: "3",
+        created: new Date(1590114044229),
+        content: '解决flutter最新版无法进行web开发问题的方案'
+      },
+      {
+        id: "4",
+        created: new Date(1590114144229),
+        content: '微软发布 Surface Duo App 开发指南:使用谷歌 Flutter SDK 编写'
+      },
+      {
+        id: "5",
+        created: new Date(1590114244229),
+        content: '开发人员的福利:使用Flutter进行Web开发和桌面开发'
       },
     ]
   }
