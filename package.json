@@ -1,0 +1,33 @@
+{
+  "name": "tinylearn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Picroup/tinylearn.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Picroup/tinylearn/issues"
+  },
+  "homepage": "https://github.com/Picroup/tinylearn#readme",
+  "dependencies": {
+    "apollo-server": "^2.13.1",
+    "class-validator": "^0.12.2",
+    "graphql": "^14.6.0",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^0.17.6"
+  },
+  "devDependencies": {
+    "@types/graphql": "^14.0.7",
+    "@types/node": "^12.12.39",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.9.2"
+  }
+}
