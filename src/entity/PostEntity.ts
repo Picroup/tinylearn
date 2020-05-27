@@ -1,20 +1,13 @@
 import { Entity, CreateDateColumn, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { UserEntity } from "./UserEntity";
+import { MetaEntity } from "../functional/entity/MetaEntity";
 
 
 @Entity()
-export class PostEntity {
+export class PostEntity extends MetaEntity {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @CreateDateColumn({
-    type: 'datetime',
-    precision: 3,
-    default: () => 'CURRENT_TIMESTAMP(3)',
-    readonly: true,
-  })
-  created: Date;
 
   @Column()
   content: string;

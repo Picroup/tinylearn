@@ -1,8 +1,9 @@
 
 import { Entity, Column, PrimaryColumn } from "typeorm";
+import { MetaEntity } from "../functional/entity/MetaEntity";
 
 @Entity()
-export class VerifyCodeEntity {
+export class VerifyCodeEntity extends MetaEntity {
 
   @PrimaryColumn()
   phone: string;
