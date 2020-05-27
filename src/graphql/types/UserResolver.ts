@@ -1,3 +1,4 @@
+import { Connection } from 'typeorm';
 import { SHOULD_SEND_REAL_CODE } from './../../app/env';
 import { SessionInfo } from './SessionInfo';
 import { VerifyCodeEntity } from './../../entity/VerifyCodeEntity';
@@ -18,13 +19,14 @@ export class UserResolver {
   @Mutation(returns => String)
   async getVerifyCode(
     @Arg('phone') phone: string,
-    @Ctx() { connection }: AppContext
+    @Ctx() { container }: AppContext
   ): Promise<string> {
+    const connection = container.resolve(Connection);
     const verifyCodeRepository = connection.getRepository(VerifyCodeEntity);
     const code = createVerifyCode();
     const expiredAt = verifyCodeExpiredDate(new Date());
     if (SHOULD_SEND_REAL_CODE) {
-      await sendVerifyCode(phone, code); // send code
+      await sendVerifyCode(container, phone, code); // send code
     }
     await verifyCodeRepository.save({ phone, code, used: false, expiredAt });
     return code;
@@ -34,8 +36,9 @@ export class UserResolver {
   async loginOrRegister(
     @Arg('phone') phone: string,
     @Arg('code') code: string,
-    @Ctx() { connection }: AppContext
+    @Ctx() { container }: AppContext
   ): Promise<SessionInfo> {
+    const connection = container.resolve(Connection);
     const userRepository = connection.getRepository(UserEntity);
     const verifyCodeRepository = connection.getRepository(VerifyCodeEntity);
     await verifyCode(verifyCodeRepository, phone, code, new Date());

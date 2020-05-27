@@ -5,13 +5,13 @@ import { buildSchema } from "type-graphql";
 import { ApolloServer } from "apollo-server";
 import { ContextFunction } from "apollo-server-core";
 import { ExpressContext } from "apollo-server-express/src/ApolloServer";
-import { createConnection } from 'typeorm';
+import { setupContainer } from "./app/setupContainer";
 
 async function main() {
 
   try {
 
-    const connection = await createConnection();
+    const container = await setupContainer();
 
     const schema = await buildSchema({
       resolvers: [__dirname + "/graphql/types/**/*.{ts,js}"],
@@ -19,7 +19,7 @@ async function main() {
     });
 
     const context: ContextFunction<ExpressContext, AppContext> = ({ req }: ExpressContext) => ({
-      connection,
+      container,
       headers: req.headers,
     })
 

@@ -5,6 +5,7 @@ import { Resolver, Query, Mutation, Arg, Ctx, UseMiddleware, InputType, Field } 
 import { Post } from "./Post";
 import { getPayloadUserId } from '../../functional/token/tokenservice';
 import { Length } from 'class-validator';
+import { Connection } from 'typeorm';
 
 @InputType()
 class CreatePostInput {
@@ -39,8 +40,9 @@ class PostResolver {
   @Mutation(returns => String)
   async createPost(
     @Arg('input') { content }: CreatePostInput,
-    @Ctx() { connection, tokenPayload }: AppContext,
+    @Ctx() { container, tokenPayload }: AppContext,
   ): Promise<string> {
+    const connection = container.resolve(Connection);
     const userId = getPayloadUserId(tokenPayload);
     const postRepository = connection.getRepository(PostEntity);
     const post = await postRepository.save({ content, userId });

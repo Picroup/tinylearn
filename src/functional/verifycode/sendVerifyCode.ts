@@ -1,14 +1,11 @@
-import { ALICLOUD_ACCESS_KEY, ALICLOUD_SECRET_KEY, ALICLOUD_TEMPLATE_CODE } from './../../app/env';
-import * as AliCore from '@alicloud/pop-core';
+import { DependencyContainer } from 'tsyringe';
+import { ALICLOUD_TEMPLATE_CODE } from './../../app/env';
+import * as AliClient from '@alicloud/pop-core';
 
-const client = new AliCore({
-  accessKeyId: ALICLOUD_ACCESS_KEY,
-  accessKeySecret: ALICLOUD_SECRET_KEY,
-  endpoint: 'https://dysmsapi.aliyuncs.com',
-  apiVersion: '2017-05-25'
-});
 
-export async function sendVerifyCode(phone: string, code: string) {
+
+export async function sendVerifyCode(container: DependencyContainer, phone: string, code: string) {
+  const aliClient = container.resolve(AliClient);
 
   const params = {
     "RegionId": "cn-hangzhou",
@@ -16,11 +13,11 @@ export async function sendVerifyCode(phone: string, code: string) {
     "SignName": "Picroup",
     "TemplateCode": ALICLOUD_TEMPLATE_CODE,
     TemplateParam: `{"code":"${code}"}`
-  }
+  };
 
   const requestOption = {
     method: 'POST'
   };
 
-  return await client.request('SendSms', params, requestOption);
+  return await aliClient.request('SendSms', params, requestOption);
 }
