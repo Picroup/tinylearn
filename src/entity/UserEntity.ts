@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from "typeorm"
 import { PostEntity } from "./PostEntity";
 import { MetaEntity } from "../functional/entity/MetaEntity";
+import { UserTagFollowEntity } from "./UserTagFollowEntity";
 
 @Entity()
 export class UserEntity extends MetaEntity {
@@ -21,4 +22,6 @@ export class UserEntity extends MetaEntity {
   @OneToMany(() => PostEntity, post => post.user)
   posts: PostEntity[];
 
+  @OneToMany(() => UserTagFollowEntity, follow => follow.user)
+  userTagFollows: UserTagFollowEntity[];
 }

@@ -1,7 +1,7 @@
-import { Entity, CreateDateColumn, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
 import { UserEntity } from "./UserEntity";
 import { MetaEntity } from "../functional/entity/MetaEntity";
-
+import { PostTagSumEntity } from "./PostTagSumEntity";
 
 @Entity()
 export class PostEntity extends MetaEntity {
@@ -18,4 +18,7 @@ export class PostEntity extends MetaEntity {
   userId: string;
   @ManyToOne(() => UserEntity, user => user.posts)
   user?: UserEntity;
+
+  @OneToMany(() => PostTagSumEntity, sum => sum.post)
+  postTagSums: PostTagSumEntity[]
 }

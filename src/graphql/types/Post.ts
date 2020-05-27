@@ -1,4 +1,5 @@
 import { ObjectType, ID, Field } from "type-graphql";
+import CursorItems from "../../functional/graphql/CursorItems";
 
 @ObjectType()
 export class Post {
@@ -13,3 +14,7 @@ export class Post {
   content: string;
 
 }
+
+
+@ObjectType()
+export class CursorPosts extends CursorItems(Post) { }
