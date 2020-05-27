@@ -1,3 +1,4 @@
+import { SHOULD_SEND_REAL_CODE } from './../../app/env';
 import { SessionInfo } from './SessionInfo';
 import { VerifyCodeEntity } from './../../entity/VerifyCodeEntity';
 import { UserEntity } from './../../entity/UserEntity';
@@ -9,6 +10,7 @@ import { verifyCodeExpiredDate } from '../../functional/verifycode/verifyCodeExp
 import { verifyCode } from '../../functional/verifycode/verifyCode';
 import { v4 as uuidv4 } from "uuid";
 import { sessionInfo } from '../../functional/sessionInfo';
+import { sendVerifyCode } from '../../functional/verifycode/sendVerifyCode';
 
 @Resolver(User)
 export class UserResolver {
@@ -21,7 +23,9 @@ export class UserResolver {
     const verifyCodeRepository = connection.getRepository(VerifyCodeEntity);
     const code = createVerifyCode();
     const expiredAt = verifyCodeExpiredDate(new Date());
-    // TODO: send code
+    if (SHOULD_SEND_REAL_CODE) {
+      await sendVerifyCode(phone, code); // send code
+    }
     await verifyCodeRepository.save({ phone, code, used: false, expiredAt });
     return code;
   }
