@@ -10,6 +10,12 @@ export class User {
   created: Date;
 
   @Field()
-  username: string
+  username: string;
+
+  @Field()
+  hasSetUsername: boolean;
+
+  @Field()
+  imageURL: string;
 }
 

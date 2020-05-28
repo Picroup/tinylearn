@@ -18,6 +18,9 @@ export class UserEntity extends MetaEntity {
   @Column({ unique: true })
   phone: string;
 
+  @Column()
+  imageURL: string;
+
   // 关系
   @OneToMany(() => PostEntity, post => post.user)
   posts: PostEntity[];
