@@ -32,7 +32,7 @@ export async function tagPosts(
 
   const items = links
     .filter(link => link.post != null)
-    .map(link => link.post!!);
+    .map(link => link.post!);
 
   const newCursor = (() => {
     if (take >= count) return null;
