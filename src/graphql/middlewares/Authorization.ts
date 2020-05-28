@@ -17,6 +17,7 @@ export const authorization: MiddlewareFn<AppContext> = async ({ context }, next)
   try {
     const tokenPayload = verifyToken(token);
     context.tokenPayload = tokenPayload;
+    context.token = token;
   } catch (error) {
     console.error(error);
     throw new AuthenticationError('授权信息无效');

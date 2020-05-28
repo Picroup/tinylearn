@@ -7,4 +7,5 @@ export type AppContext = {
   container: DependencyContainer,
   headers: IncomingHttpHeaders,
   tokenPayload?: TokenPayload,
+  token?: string,
 }

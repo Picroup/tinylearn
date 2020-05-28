@@ -14,7 +14,7 @@ async function main() {
     const container = await setupContainer();
 
     const schema = await buildSchema({
-      resolvers: [__dirname + "/graphql/types/**/*.{ts,js}"],
+      resolvers: [__dirname + "/graphql/**/*.{ts,js}"],
       dateScalarMode: 'timestamp'
     });
 
