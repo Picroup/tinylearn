@@ -5,6 +5,7 @@ import { Connection } from 'typeorm';
 import { PostTagSumEntity } from '../../../entity/PostTagSumEntity';
 import { LessThanDate } from '../../../functional/typeorm/MoreThanDate';
 import { CursorInput } from '../../../functional/graphql/CursorInput';
+import { decodeDateCursor, encodeDateCursor } from '../../../functional/cursor/decodeDateCursor';
 
 export async function tagPosts(
   { container }: AppContext,
@@ -15,7 +16,7 @@ export async function tagPosts(
   const connection = container.resolve(Connection);
   const postTagRepository = connection.getRepository(PostTagSumEntity);
 
-  const cursorCreated = cursor != null ? new Date(parseInt(cursor)) : new Date();
+  const cursorCreated = cursor != null ? decodeDateCursor(cursor) : new Date();
 
   const [links, count] = await postTagRepository.findAndCount({
     where: {
@@ -35,7 +36,7 @@ export async function tagPosts(
 
   const newCursor = (() => {
     if (take >= count) return null;
-    return items[take - 1].created.getTime().toString();
+    return encodeDateCursor(items[take - 1].created);
   })();
 
   return {

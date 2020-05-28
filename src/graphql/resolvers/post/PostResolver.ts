@@ -1,14 +1,17 @@
+import { CursorInput } from './../../../functional/graphql/CursorInput';
+import { CursorPosts } from './../../types/Post';
 import { authorization } from '../../middlewares/Authorization';
 import { AppContext } from '../../../app/context';
 import { Resolver, Query, Mutation, Arg, Ctx, UseMiddleware } from "type-graphql";
 import { Post } from "../../types/Post";
 import { CreatePostInput, createPost } from './createPost';
+import { timeline } from './timeline';
 
 @Resolver(Post)
 export class PostResolver {
 
-  @UseMiddleware(authorization)
   @Query(returns => [Post])
+  @UseMiddleware(authorization)
   async posts(): Promise<Post[]> {
     const posts = [
       {
@@ -25,12 +28,21 @@ export class PostResolver {
     return posts;
   }
 
-  @UseMiddleware(authorization)
   @Mutation(returns => String)
+  @UseMiddleware(authorization)
   async createPost(
     @Ctx() context: AppContext,
     @Arg('input') input: CreatePostInput,
   ): Promise<string> {
     return createPost(context, input);
+  }
+
+  @Query(returns => CursorPosts)
+  @UseMiddleware(authorization)
+  async timeline(
+    @Ctx() context: AppContext,
+    @Arg('input') input: CursorInput,
+  ): Promise<CursorPosts> {
+    return timeline(context, input);
   }
 }
