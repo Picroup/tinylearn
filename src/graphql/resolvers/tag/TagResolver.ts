@@ -1,10 +1,12 @@
+import { authorization } from './../../middlewares/Authorization';
 import { tags } from './tags';
 import { CursorPosts } from '../../types/Post';
 import { AppContext } from '../../../app/context';
 import { Tag, CursorTags } from '../../types/Tag';
-import { Resolver, Query, Ctx, FieldResolver, Arg, Root } from "type-graphql";
+import { Resolver, Query, Ctx, FieldResolver, Arg, Root, UseMiddleware } from "type-graphql";
 import { tagPosts } from './tagPosts';
 import { CursorInput } from '../../../functional/graphql/CursorInput';
+import { followingTags } from './followingTags';
 
 
 @Resolver(Tag)
@@ -25,5 +27,14 @@ export class TagResolver {
     @Arg('input') input: CursorInput,
   ): Promise<CursorTags> {
     return tags(context, input);
+  }
+
+  @Query(() => CursorTags)
+  @UseMiddleware(authorization)
+  async followingTags(
+    @Ctx() context: AppContext,
+    @Arg('input') input: CursorInput,
+  ): Promise<CursorTags> {
+    return followingTags(context, input);
   }
 }
