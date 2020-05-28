@@ -23,7 +23,7 @@ export async function setUsername(
   const userId = getPayloadUserId(tokenPayload);
   const user = await userRepository.findOneOrFail({ id: userId });
   if (user.hasSetUsername) throw new Error('您曾经设置过用户名');
-  await userRepository.update(userId, { username, hasSetUsername: true });
+  await userRepository.update(userId, { username, hasSetUsername: true, tagName: `#@${username}` });
   const savedUser = await userRepository.findOneOrFail(userId);
   return {
     token: token!,

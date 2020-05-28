@@ -1,3 +1,4 @@
+import { TagKind } from './../../../entity/TagEntity';
 import { AppContext } from './../../../app/context';
 import { InputType, Field } from "type-graphql";
 import { TagEntity } from '../../../entity/TagEntity';
@@ -38,19 +39,19 @@ export async function followOrUnfollowTag({
     userId,
     tagName,
     follow,
-    isUserTag
+    tagKind,
   }: {
     tagRepository: Repository<TagEntity>;
     userTagFollowRepository: Repository<UserTagFollowEntity>;
     userId: string;
     tagName: string;
     follow: boolean;
-    isUserTag?: boolean;
+    tagKind?: TagKind;
   }) {
   if (follow) {
     const tag = await tagRepository.findOne({ name: tagName })
     if (tag == null) {
-      await tagRepository.insert({ name: tagName, isUserTag });
+      await tagRepository.insert({ name: tagName, kind: tagKind });
     }
     await userTagFollowRepository.save({ userId, tagName });
   } else {

@@ -3,7 +3,7 @@ import { InputType, Field } from "type-graphql";
 import { followOrUnfollowTag } from './followTag';
 import { Connection } from 'typeorm';
 import { UserEntity } from '../../../entity/UserEntity';
-import { TagEntity } from '../../../entity/TagEntity';
+import { TagEntity, TagKind } from '../../../entity/TagEntity';
 import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 
@@ -25,8 +25,8 @@ export async function followUser(
   const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
   const userId = getPayloadUserId(tokenPayload);
 
-  const { username } = await userRepository.findOneOrFail(targetUserId);
-  const tagName = `#@${username}`;
+  const { username, tagName } = await userRepository.findOneOrFail(targetUserId);
+  if (tagName == null) throw new Error(`User ${username} tagName is null`);
 
   await followOrUnfollowTag({
     tagRepository,
@@ -34,7 +34,7 @@ export async function followUser(
     userId,
     tagName,
     follow: true,
-    isUserTag: true
+    tagKind: TagKind.user,
   });
   return 'success';
 }

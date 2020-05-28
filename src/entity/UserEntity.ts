@@ -1,5 +1,6 @@
+import { TagEntity } from './TagEntity';
 import { PostUserMarkEntity } from './PostUserMarkEntity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, OneToOne, JoinColumn } from "typeorm"
 import { PostEntity } from "./PostEntity";
 import { MetaEntity } from "../functional/entity/MetaEntity";
 import { UserTagFollowEntity } from "./UserTagFollowEntity";
@@ -26,6 +27,12 @@ export class UserEntity extends MetaEntity {
   // 关系
   @OneToMany(() => PostEntity, post => post.user)
   posts: PostEntity[];
+
+  @Column({ type: 'varchar', length: 36, nullable: true })
+  tagName?: string;
+  @OneToOne(() => TagEntity, tag => tag.user)
+  @JoinColumn()
+  tag?: TagEntity;
 
   @OneToMany(() => UserTagFollowEntity, follow => follow.user)
   userTagFollows: UserTagFollowEntity[];

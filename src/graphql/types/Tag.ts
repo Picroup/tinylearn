@@ -1,3 +1,4 @@
+import { User } from './User';
 import { ObjectType, Field, ID } from "type-graphql";
 import CursorItems from "../../functional/graphql/CursorItems";
 
@@ -6,8 +7,13 @@ import CursorItems from "../../functional/graphql/CursorItems";
 export class Tag {
 
   @Field(type => ID)
-  name: string
-  
+  name: string;
+
+  @Field()
+  kind: string;
+
+  @Field(type => User, { nullable: true })
+  user?: User;
 }
 
 @ObjectType()

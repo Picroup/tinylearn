@@ -2,7 +2,7 @@ import { CursorInput } from './../../../functional/graphql/CursorInput';
 import { CursorTags } from './../../types/Tag';
 import { AppContext } from './../../../app/context';
 import { Connection } from 'typeorm';
-import { TagEntity } from '../../../entity/TagEntity';
+import { TagEntity, TagKind } from '../../../entity/TagEntity';
 import { LessThanDate } from '../../../functional/typeorm/MoreThanDate';
 import { decodeDateCursor, encodeDateCursor } from '../../../functional/cursor/decodeDateCursor';
 
@@ -19,7 +19,7 @@ export async function tags(
   const [items, count] = await tagRepository.findAndCount({
     where: {
       created: LessThanDate(cursorCreated),
-      isUserTag: false,
+      kind: TagKind.tag,
     },
     order: {
       created: 'DESC',

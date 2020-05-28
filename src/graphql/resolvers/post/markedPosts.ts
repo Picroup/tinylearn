@@ -29,7 +29,7 @@ export async function markedPosts(
     },
     relations: ['post'],
     take,
-  })
+  });
 
   const items = links
     .filter(link => link.post != null)

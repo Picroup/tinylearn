@@ -25,8 +25,8 @@ export async function unfollowUser(
   const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
   const userId = getPayloadUserId(tokenPayload);
 
-  const { username } = await userRepository.findOneOrFail(targetUserId);
-  const tagName = `#@${username}`;
+  const { username, tagName } = await userRepository.findOneOrFail(targetUserId);
+  if (tagName == null) throw new Error(`User ${username} tagName is null`);
   await followOrUnfollowTag({
     tagRepository,
     userTagFollowRepository,
