@@ -1,9 +1,9 @@
+import { PostUserMarkEntity } from './PostUserMarkEntity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from "typeorm"
 import { PostEntity } from "./PostEntity";
 import { MetaEntity } from "../functional/entity/MetaEntity";
 import { UserTagFollowEntity } from "./UserTagFollowEntity";
 import { PostUserUpEntity } from "./PostUserUpEntity";
-import { PostTagSumEntity } from "./PostTagSumEntity";
 
 @Entity()
 export class UserEntity extends MetaEntity {
@@ -32,4 +32,7 @@ export class UserEntity extends MetaEntity {
 
   @OneToMany(() => PostUserUpEntity, up => up.user)
   postUserUps: PostUserUpEntity[]
+
+  @OneToMany(() => PostUserMarkEntity, mark => mark.user)
+  postUserMarks: PostUserMarkEntity[]
 }

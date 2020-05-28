@@ -1,3 +1,5 @@
+import { UnmarkInput, unmark } from './unmark';
+import { MarkInput, mark } from './mark';
 import { SetMyImageURLInput, setMyImageURL } from './setMyImageURL';
 import { UnfollowUserInput, unfollowUser } from './unfollowUser';
 import { FollowUserInput, followUser } from './followUser';
@@ -106,4 +108,23 @@ export class UserResolver {
   ): Promise<string> {
     return up(context, input);
   }
+
+  @Mutation(() => String)
+  @UseMiddleware(authorization)
+  async mark(
+    @Ctx() context: AppContext,
+    @Arg('input') input: MarkInput,
+  ): Promise<string> {
+    return mark(context, input);
+  }
+
+  @Mutation(() => String)
+  @UseMiddleware(authorization)
+  async unmark(
+    @Ctx() context: AppContext,
+    @Arg('input') input: UnmarkInput,
+  ): Promise<string> {
+    return unmark(context, input);
+  }
+
 }

@@ -21,5 +21,5 @@ export async function up(
   const userId = getPayloadUserId(tokenPayload);
 
   await postUserUpRepository.save({ userId, postId });
-  return 'success'
+  return 'success';
 }

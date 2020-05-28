@@ -3,6 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "ty
 import { UserEntity } from "./UserEntity";
 import { MetaEntity } from "../functional/entity/MetaEntity";
 import { PostTagSumEntity } from "./PostTagSumEntity";
+import { PostUserMarkEntity } from './PostUserMarkEntity';
 
 @Entity()
 export class PostEntity extends MetaEntity {
@@ -25,4 +26,7 @@ export class PostEntity extends MetaEntity {
 
   @OneToMany(() => PostUserUpEntity, up => up.post)
   postUserUps: PostUserUpEntity[]
+
+  @OneToMany(() => PostUserMarkEntity, mark => mark.post)
+  postUserMarks: PostUserMarkEntity[]
 }
