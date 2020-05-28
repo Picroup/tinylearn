@@ -1,25 +1,15 @@
 import { AppContext } from '../../../app/context';
-import { InputType, Field, Int } from "type-graphql";
 import { Tag } from '../../types/Tag';
 import { CursorPosts } from '../../types/Post';
 import { Connection } from 'typeorm';
 import { PostTagSumEntity } from '../../../entity/PostTagSumEntity';
 import { LessThanDate } from '../../../functional/typeorm/MoreThanDate';
-
-@InputType()
-export class TagPostsInput {
-
-  @Field({ nullable: true })
-  cursor?: string;
-
-  @Field(type => Int, { defaultValue: 12 })
-  take: number = 12;
-}
+import { CursorInput } from '../../../functional/graphql/CursorInput';
 
 export async function tagPosts(
   { container }: AppContext,
   tag: Tag,
-  { cursor, take }: TagPostsInput,
+  { cursor, take }: CursorInput,
 ): Promise<CursorPosts> {
 
   const connection = container.resolve(Connection);

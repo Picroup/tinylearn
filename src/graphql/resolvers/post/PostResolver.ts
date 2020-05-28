@@ -5,7 +5,7 @@ import { Post } from "../../types/Post";
 import { CreatePostInput, createPost } from './createPost';
 
 @Resolver(Post)
-class PostResolver {
+export class PostResolver {
 
   @UseMiddleware(authorization)
   @Query(returns => [Post])

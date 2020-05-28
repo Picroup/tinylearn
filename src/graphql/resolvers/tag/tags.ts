@@ -1,23 +1,13 @@
+import { CursorInput } from './../../../functional/graphql/CursorInput';
 import { CursorTags } from './../../types/Tag';
 import { AppContext } from './../../../app/context';
-import { InputType, Field, Int } from "type-graphql";
 import { Connection } from 'typeorm';
 import { TagEntity } from '../../../entity/TagEntity';
 import { LessThanDate } from '../../../functional/typeorm/MoreThanDate';
 
-@InputType() 
-export class TagsInput {
-
-  @Field({ nullable: true })
-  cursor?: string;
-
-  @Field(type => Int, { defaultValue: 12 })
-  take: number = 12;
-}
-
 export async function tags(
   { container }: AppContext,
-  { cursor, take }: TagsInput,
+  { cursor, take }: CursorInput,
 ): Promise<CursorTags> {
 
   const connection = container.resolve(Connection);
