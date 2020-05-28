@@ -2,6 +2,8 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } f
 import { PostEntity } from "./PostEntity";
 import { MetaEntity } from "../functional/entity/MetaEntity";
 import { UserTagFollowEntity } from "./UserTagFollowEntity";
+import { PostUserUpEntity } from "./PostUserUpEntity";
+import { PostTagSumEntity } from "./PostTagSumEntity";
 
 @Entity()
 export class UserEntity extends MetaEntity {
@@ -27,4 +29,7 @@ export class UserEntity extends MetaEntity {
 
   @OneToMany(() => UserTagFollowEntity, follow => follow.user)
   userTagFollows: UserTagFollowEntity[];
+
+  @OneToMany(() => PostUserUpEntity, up => up.user)
+  postUserUps: PostUserUpEntity[]
 }

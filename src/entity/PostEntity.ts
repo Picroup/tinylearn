@@ -1,3 +1,4 @@
+import { PostUserUpEntity } from './PostUserUpEntity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
 import { UserEntity } from "./UserEntity";
 import { MetaEntity } from "../functional/entity/MetaEntity";
@@ -21,4 +22,7 @@ export class PostEntity extends MetaEntity {
 
   @OneToMany(() => PostTagSumEntity, sum => sum.post)
   postTagSums: PostTagSumEntity[]
+
+  @OneToMany(() => PostUserUpEntity, up => up.post)
+  postUserUps: PostUserUpEntity[]
 }

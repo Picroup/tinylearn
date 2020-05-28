@@ -12,6 +12,7 @@ import { AppContext } from '../../../app/context';
 import { Resolver, Mutation, Arg, Ctx, UseMiddleware, Query } from "type-graphql";
 import { User } from '../../types/User';
 import { loginOrRegister, LoginOrRegisterInput } from './loginOrRegister';
+import { up, UpInput } from './up';
 
 @Resolver(User)
 export class UserResolver {
@@ -95,5 +96,14 @@ export class UserResolver {
     @Arg('input') input: UnfollowTagInput,
   ): Promise<string> {
     return unfollowTag(context, input);
+  }
+
+  @Mutation(() => String)
+  @UseMiddleware(authorization)
+  async up(
+    @Ctx() context: AppContext,
+    @Arg('input') input: UpInput,
+  ): Promise<string> {
+    return up(context, input);
   }
 }
