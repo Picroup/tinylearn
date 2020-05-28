@@ -6,6 +6,7 @@ import { Resolver, Query, Mutation, Arg, Ctx, UseMiddleware } from "type-graphql
 import { Post } from "../../types/Post";
 import { CreatePostInput, createPost } from './createPost';
 import { timeline } from './timeline';
+import { markedPosts } from './markedPosts';
 
 @Resolver(Post)
 export class PostResolver {
@@ -44,5 +45,14 @@ export class PostResolver {
     @Arg('input') input: CursorInput,
   ): Promise<CursorPosts> {
     return timeline(context, input);
+  }
+
+  @Query(returns => CursorPosts)
+  @UseMiddleware(authorization)
+  async markedPosts(
+    @Ctx() context: AppContext,
+    @Arg('input') input: CursorInput,
+  ): Promise<CursorPosts> {
+    return markedPosts(context, input);
   }
 }
