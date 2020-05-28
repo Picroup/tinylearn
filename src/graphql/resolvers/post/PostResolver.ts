@@ -7,6 +7,7 @@ import { Post } from "../../types/Post";
 import { CreatePostInput, createPost } from './createPost';
 import { timeline } from './timeline';
 import { markedPosts } from './markedPosts';
+import { upPosts } from './upPosts';
 
 @Resolver(Post)
 export class PostResolver {
@@ -54,5 +55,14 @@ export class PostResolver {
     @Arg('input') input: CursorInput,
   ): Promise<CursorPosts> {
     return markedPosts(context, input);
+  }
+
+  @Query(returns => CursorPosts)
+  @UseMiddleware(authorization)
+  async upPosts(
+    @Ctx() context: AppContext,
+    @Arg('input') input: CursorInput,
+  ): Promise<CursorPosts> {
+    return upPosts(context, input);
   }
 }
