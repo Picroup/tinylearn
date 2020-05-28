@@ -1,3 +1,4 @@
+import { SetMyImageURLInput, setMyImageURL } from './setMyImageURL';
 import { UnfollowUserInput, unfollowUser } from './unfollowUser';
 import { FollowUserInput, followUser } from './followUser';
 import { UnfollowTagInput, unfollowTag } from './unfollowTag';
@@ -47,6 +48,15 @@ export class UserResolver {
     @Arg('input') input: SetUsernameInput,
   ): Promise<SessionInfo> {
     return setUsername(context, input);
+  }
+
+  @Mutation(() => SessionInfo)
+  @UseMiddleware(authorization)
+  async setMyImageURL(
+    @Ctx() context: AppContext,
+    @Arg('input') input: SetMyImageURLInput,
+  ): Promise<SessionInfo> {
+    return setMyImageURL(context, input);
   }
 
   @Mutation(() => String)
