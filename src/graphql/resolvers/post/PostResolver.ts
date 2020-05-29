@@ -1,13 +1,15 @@
+import { Tag } from './../../types/Tag';
 import { CursorInput } from './../../../functional/graphql/CursorInput';
 import { CursorPosts } from './../../types/Post';
 import { authorization } from '../../middlewares/Authorization';
 import { AppContext } from '../../../app/context';
-import { Resolver, Query, Mutation, Arg, Ctx, UseMiddleware } from "type-graphql";
+import { Resolver, Query, Mutation, Arg, Ctx, UseMiddleware, FieldResolver, Root } from "type-graphql";
 import { Post } from "../../types/Post";
 import { CreatePostInput, createPost } from './createPost';
 import { timeline } from './timeline';
 import { markedPosts } from './markedPosts';
 import { upPosts } from './upPosts';
+import { postTags, PostTagsInput } from './postTags';
 
 @Resolver(Post)
 export class PostResolver {
@@ -64,5 +66,14 @@ export class PostResolver {
     @Arg('input') input: CursorInput,
   ): Promise<CursorPosts> {
     return upPosts(context, input);
+  }
+
+  @FieldResolver(() => [Tag])
+  async tags(
+    @Ctx() context: AppContext,
+    @Root() post: Post,
+    @Arg('input') input: PostTagsInput,
+  ): Promise<Tag[]> {
+    return postTags(context, post, input);
   }
 }
