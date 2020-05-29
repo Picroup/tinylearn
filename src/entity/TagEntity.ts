@@ -27,6 +27,9 @@ export class TagEntity extends MetaEntity {
   })
   keywords: string[];
 
+  @Column({ default: false })
+  isAutoDetect: boolean;
+
   // relationship
 
   @OneToOne(() => UserEntity, user => user.tag, {
