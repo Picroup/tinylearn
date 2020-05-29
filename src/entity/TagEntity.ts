@@ -22,6 +22,11 @@ export class TagEntity extends MetaEntity {
   })
   kind: TagKind;
 
+  @Column({
+    type: 'simple-array',
+  })
+  keywords: string[];
+
   // relationship
 
   @OneToOne(() => UserEntity, user => user.tag, {

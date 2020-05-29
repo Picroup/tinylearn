@@ -5,6 +5,7 @@ import { TagEntity } from '../../../entity/TagEntity';
 import { Repository, Connection } from 'typeorm';
 import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
+import { insertTag } from '../../../functional/db/tag';
 
 @InputType()
 export class FollowTagInput {
@@ -49,9 +50,9 @@ export async function followOrUnfollowTag({
     tagKind?: TagKind;
   }) {
   if (follow) {
-    const tag = await tagRepository.findOne({ name: tagName })
+    const tag = await tagRepository.findOne({ name: tagName });
     if (tag == null) {
-      await tagRepository.insert({ name: tagName, kind: tagKind });
+      await insertTag(tagRepository, { name: tagName, kind: tagKind });
     }
     await userTagFollowRepository.save({ userId, tagName });
   } else {
