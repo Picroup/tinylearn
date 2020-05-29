@@ -30,7 +30,7 @@ export class UserEntity extends MetaEntity {
 
   @Column({ type: 'varchar', length: 36, nullable: true })
   tagName?: string;
-  @OneToOne(() => TagEntity, tag => tag.user)
+  @OneToOne(() => TagEntity, tag => tag.user, { onUpdate: 'CASCADE' })
   @JoinColumn()
   tag?: TagEntity;
 

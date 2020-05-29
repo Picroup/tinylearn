@@ -4,6 +4,7 @@ import { InputType, Field } from "type-graphql";
 import { Connection } from 'typeorm';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { UserEntity } from '../../../entity/UserEntity';
+import { usernameToTagName } from '../../../functional/tag/usernameToTagName';
 
 
 @InputType()
@@ -23,7 +24,7 @@ export async function setUsername(
   const userId = getPayloadUserId(tokenPayload);
   const user = await userRepository.findOneOrFail({ id: userId });
   if (user.hasSetUsername) throw new Error('您曾经设置过用户名');
-  await userRepository.update(userId, { username, hasSetUsername: true, tagName: `#@${username}` });
+  await userRepository.update(userId, { username, hasSetUsername: true, tagName: usernameToTagName(username) });
   const savedUser = await userRepository.findOneOrFail(userId);
   return {
     token: token!,

@@ -15,6 +15,6 @@ export class UserTagFollowEntity extends MetaEntity {
 
   @ManyToOne(() => UserEntity, user => user.userTagFollows)
   user?: UserEntity;
-  @ManyToOne(() => TagEntity, tag => tag.userTagFollows)
+  @ManyToOne(() => TagEntity, tag => tag.userTagFollows, { onUpdate: 'CASCADE' })
   tag?: TagEntity;
 }

@@ -26,7 +26,7 @@ export class PostTagSumEntity extends MetaEntity {
 
   @ManyToOne(() => PostEntity, post => post.postTagSums)
   post?: PostEntity;
-  @ManyToOne(() => TagEntity, tag => tag.postTagSums)
+  @ManyToOne(() => TagEntity, tag => tag.postTagSums, { onUpdate: 'CASCADE' })
   tag?: TagEntity;
 
 }

@@ -1,6 +1,7 @@
 import { Repository, InsertResult } from 'typeorm';
 import { TagEntity } from './../../entity/TagEntity';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { tagNameToKeyword } from '../tag/tagNameToKeyword';
 
 export async function insertTag(
   tagRepository: Repository<TagEntity>,
@@ -8,7 +9,7 @@ export async function insertTag(
 ): Promise<InsertResult> {
   let _entity = entity;
   const _keywords = entity.keywords || [];
-  const nameKeyword = (entity.name as string).slice(1).toLocaleLowerCase();
+  const nameKeyword = tagNameToKeyword(entity.name as string);
   _entity.keywords = [nameKeyword, ..._keywords];
   return await tagRepository.insert(_entity);
 }
