@@ -6,6 +6,7 @@ import { ApolloServer } from "apollo-server";
 import { ContextFunction } from "apollo-server-core";
 import { ExpressContext } from "apollo-server-express/src/ApolloServer";
 import { setupContainer } from "./app/setupContainer";
+import { ApolloLogging } from "./functional/graphql/ApolloLogging";
 
 async function main() {
 
@@ -26,6 +27,7 @@ async function main() {
     const server = new ApolloServer({
       schema,
       context,
+      extensions: [() => new ApolloLogging()],
       playground: true
     });
 
