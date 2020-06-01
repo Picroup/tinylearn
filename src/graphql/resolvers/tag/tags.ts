@@ -1,7 +1,7 @@
 import { CursorInput } from './../../../functional/graphql/CursorInput';
 import { CursorTags } from './../../types/Tag';
 import { AppContext } from './../../../app/context';
-import { Connection } from 'typeorm';
+import { Connection, FindConditions } from 'typeorm';
 import { TagEntity, TagKind } from '../../../entity/TagEntity';
 import { LessThanDate } from '../../../functional/typeorm/MoreThanDate';
 import { decodeDateCursor, encodeDateCursor } from '../../../functional/cursor/decodeDateCursor';
@@ -14,13 +14,16 @@ export async function tags(
   const connection = container.resolve(Connection);
   const tagRepository = connection.getRepository(TagEntity);
 
-  const cursorCreated = cursor != null ? decodeDateCursor(cursor) : new Date();
-
+  let findOption: FindConditions<TagEntity> = {
+    kind: TagKind.tag,
+  };
+  
+  if (cursor != null) {
+    findOption.created = decodeDateCursor(cursor);
+  }
+  
   const [items, count] = await tagRepository.findAndCount({
-    where: {
-      created: LessThanDate(cursorCreated),
-      kind: TagKind.tag,
-    },
+    where: findOption,
     order: {
       created: 'DESC',
     },

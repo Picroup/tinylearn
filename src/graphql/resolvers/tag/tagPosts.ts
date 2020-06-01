@@ -1,7 +1,8 @@
+import { PostEntity } from './../../../entity/PostEntity';
 import { AppContext } from '../../../app/context';
 import { Tag } from '../../types/Tag';
 import { CursorPosts } from '../../types/Post';
-import { Connection, FindConditions } from 'typeorm';
+import { Connection } from 'typeorm';
 import { PostTagSumEntity } from '../../../entity/PostTagSumEntity';
 import { LessThanDate } from '../../../functional/typeorm/MoreThanDate';
 import { CursorInput } from '../../../functional/graphql/CursorInput';
@@ -16,29 +17,42 @@ export async function tagPosts(
 
   const connection = container.resolve(Connection);
   const postTagRepository = connection.getRepository(PostTagSumEntity);
+  const postRepository = connection.getRepository(PostEntity);
 
   const cursorCreated = cursor != null ? decodeDateCursor(cursor) : new Date();
 
-  let findOption: FindConditions<PostTagSumEntity> = {
-    created: LessThanDate(cursorCreated),
-  };
+  const [items, count] = await (async function (): Promise<[PostEntity[], number]> {
+    if (tag.name == ALL_TAGNAME) {
+      return await postRepository.findAndCount({
+        where: {
+          created: LessThanDate(cursorCreated),
+        },
+        order: {
+          created: 'DESC',
+        },
+        take
+      });
+    }
 
-  if (tag.name != ALL_TAGNAME) {
-    findOption.tagName = tag.name;
-  }
+    const [links, count] = await postTagRepository.findAndCount({
+      where: {
+        tagName: tag.name,
+        created: LessThanDate(cursorCreated),
+      },
+      order: {
+        created: 'DESC',
+      },
+      relations: ['post'],
+      take
+    });
 
-  const [links, count] = await postTagRepository.findAndCount({
-    where: findOption,
-    order: {
-      created: 'DESC',
-    },
-    relations: ['post'],
-    take
-  });
+    const items = links
+      .filter(link => link.post != null)
+      .map(link => link.post!);
 
-  const items = links
-    .filter(link => link.post != null)
-    .map(link => link.post!);
+    return [items, count];
+  })();
+
 
   const newCursor = (() => {
     if (take >= count) return null;
