@@ -30,10 +30,18 @@ export async function loginOrRegister(
   const user = await userRepository.findOne({ phone });
   if (user != null) return sessionInfo(user);
 
+  const imageURL = randomImageURL();
+
   const newUser = await userRepository.save({
     phone,
     username: uuidv4(),
     hasSetUsername: false,
+    imageURL,    
   });
   return sessionInfo(newUser);
 }
+
+export function randomImageURL(): string {
+  const index = Math.floor(Math.random() * 7);
+  return `https://minio.picroup.com:444/tinylearn.dev/profile_male_${index + 1}.JPG`;
+} 

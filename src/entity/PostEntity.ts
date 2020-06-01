@@ -11,7 +11,7 @@ export class PostEntity extends MetaEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'text' })
   content: string;
 
   // 关系
