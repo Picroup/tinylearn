@@ -7,6 +7,7 @@ import { Resolver, Query, Ctx, FieldResolver, Arg, Root, UseMiddleware } from "t
 import { tagPosts } from './tagPosts';
 import { CursorInput } from '../../../functional/graphql/CursorInput';
 import { followingTags } from './followingTags';
+import { TagInput, tag } from './tag';
 
 
 @Resolver(Tag)
@@ -19,6 +20,14 @@ export class TagResolver {
     @Arg('input') input: CursorInput,
   ): Promise<CursorPosts> {
     return tagPosts(context, tag, input)
+  }
+
+  @Query(() => Tag, { nullable: true })
+  async tag(
+    @Ctx() context: AppContext,
+    @Arg('input') input: TagInput,
+  ): Promise<Tag | undefined> {
+    return tag(context, input);
   }
 
   @Query(() => CursorTags)
