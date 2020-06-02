@@ -1,3 +1,4 @@
+import { User } from './../../types/User';
 import { Tag } from './../../types/Tag';
 import { CursorInput } from './../../../functional/graphql/CursorInput';
 import { CursorPosts } from './../../types/Post';
@@ -10,27 +11,18 @@ import { timeline } from './timeline';
 import { markedPosts } from './markedPosts';
 import { upPosts } from './upPosts';
 import { postTags, PostTagsInput } from './postTags';
+import { postUser } from './postUser';
 
 @Resolver(Post)
 export class PostResolver {
 
-  @Query(returns => [Post])
-  @UseMiddleware(authorization)
-  async posts(): Promise<Post[]> {
-    const posts = [
-      {
-        id: '0',
-        created: new Date(),
-        content: 'Flutter 开发演示',
-      },
-      {
-        id: '1',
-        created: new Date(),
-        content: 'Node 开发演示',
-      },
-    ];
-    return posts;
-  }
+  @FieldResolver(() => User, { nullable: true })
+  user(
+    @Ctx() context: AppContext,
+    @Root() post: Post,
+  ): Promise<User | undefined> {
+    return postUser(context, post);
+  } 
 
   @Mutation(returns => String)
   @UseMiddleware(authorization)

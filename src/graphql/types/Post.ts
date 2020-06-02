@@ -13,6 +13,8 @@ export class Post {
   @Field()
   content: string;
 
+  @Field()
+  userId: string;
 }
 
 
