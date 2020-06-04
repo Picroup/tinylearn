@@ -1,0 +1,11 @@
+.vscode/*
+
+node_modules/
+tests/
+npm-debug.log
+dist/
+build/
+.env
+
+.git
+.DS_Store

@@ -6,10 +6,10 @@
       "es2018",
       "esnext.asynciterable"
     ],
+    "outDir": "./dist",
     "moduleResolution": "node",
     "strictFunctionTypes": true,
     "strictNullChecks": true,
-    "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "experimentalDecorators": true,
