@@ -1,6 +1,6 @@
 import { DependencyContainer } from 'tsyringe';
 import { ALICLOUD_TEMPLATE_CODE } from './../../app/env';
-import * as AliClient from '@alicloud/pop-core';
+import AliClient = require('@alicloud/pop-core');
 
 
 

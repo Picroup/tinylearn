@@ -6,7 +6,8 @@
     "url": "https://github.com/Picroup/tinylearn"
   },
   "scripts": {
-    "start": "ts-node src"
+    "start": "ts-node src",
+    "build": "tsc -p ."
   },
   "author": "beeth0ven",
   "license": "MIT",

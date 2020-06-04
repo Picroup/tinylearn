@@ -2,7 +2,7 @@ import { UserEntity } from './../entity/UserEntity';
 import { EntityDataLoader } from './../functional/dataloader/EntityDataLoader';
 import { DependencyContainer, container, instanceCachingFactory } from "tsyringe";
 import { createConnection, Connection } from "typeorm";
-import * as AliClient from '@alicloud/pop-core';
+import AliClient = require('@alicloud/pop-core');
 import { ALICLOUD_ACCESS_KEY, ALICLOUD_SECRET_KEY } from "./env";
 import { lazyCachingFactory } from '../functional/tsyringe/lazyCachingFactory';
 
