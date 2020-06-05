@@ -27,6 +27,7 @@ export async function createPost(
 ): Promise<string> {
   const connection = container.resolve(Connection);
   const postRepository = connection.getRepository(PostEntity);
+  const userRepository = connection.getRepository(UserEntity);
   const userId = getPayloadUserId(tokenPayload);
 
   const tagNames = await (async () => {
@@ -39,6 +40,7 @@ export async function createPost(
   })()
 
   const post = await postRepository.save({ content, userId });
+  await userRepository.increment({ id: userId }, 'postsCount', 1);
   await createPostTagSums(container, tagNames, post.id);
   return post.id;
 }
