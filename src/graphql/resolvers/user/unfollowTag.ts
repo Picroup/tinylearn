@@ -1,10 +1,10 @@
 import { AppContext } from './../../../app/context';
 import { InputType, Field } from "type-graphql";
-import { TagEntity } from '../../../entity/TagEntity';
-import { Repository, Connection } from 'typeorm';
+import { Connection } from 'typeorm';
 import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
-import { followOrUnfollowTag } from './followTag';
+import { _unfollowTag } from './followTag';
+import { UserEntity } from '../../../entity/UserEntity';
 
 @InputType()
 export class UnfollowTagInput {
@@ -19,16 +19,19 @@ export async function unfollowTag(
 ): Promise<string> {
 
   const connection = container.resolve(Connection);
-  const tagRepository = connection.getRepository(TagEntity);
+  const userRepository = connection.getRepository(UserEntity);
   const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
   const userId = getPayloadUserId(tokenPayload);
 
-  await followOrUnfollowTag({
-    tagRepository,
+  const hasEffect = await _unfollowTag({
     userTagFollowRepository,
     userId,
     tagName,
-    follow: false
   });
+
+  if (hasEffect) {
+    await userRepository.decrement({ id: userId }, 'followsCount', 1);
+  }
+
   return 'success';
 }
