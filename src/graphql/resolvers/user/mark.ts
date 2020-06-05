@@ -23,7 +23,10 @@ export async function mark(
   const userRepository = connection.getRepository(UserEntity);
   const userId = getPayloadUserId(tokenPayload);
 
-  await postUserMarkRepository.save({ userId, postId });
-  await userRepository.increment({ id: userId }, 'marksCount', 1);
+  const exist = await postUserMarkRepository.findOne({ userId, postId });
+  if (exist == null) {
+    await postUserMarkRepository.insert({ userId, postId });
+    await userRepository.increment({ id: userId }, 'marksCount', 1);
+  }
   return 'success';
 }
