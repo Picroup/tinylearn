@@ -24,8 +24,8 @@ export async function up(
   const postRepository = connection.getRepository(PostEntity);
   const userId = getPayloadUserId(tokenPayload);
 
-  const exists = await postUserUpRepository.findOne({ userId, postId });
-  if (exists == null) {
+  const link = await postUserUpRepository.findOne({ userId, postId });
+  if (link == null) {
     await postUserUpRepository.insert({ userId, postId });
     const post = await postRepository.findOneOrFail(postId);
     await userRepository.increment({ id: userId }, 'upsCount', 1);

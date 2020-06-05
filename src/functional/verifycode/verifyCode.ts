@@ -8,12 +8,12 @@ export async function verifyCode(
   code: string,
   date: Date,
 ): Promise<void> {
-  const exist = await verifyCodeRepostory.findOne({ 
+  const verifyCode = await verifyCodeRepostory.findOne({ 
     phone, 
     code,
     used: false,
     expiredAt: MoreThanDate(date)
   });
-  if (exist == null) throw new Error('验证码无效')
+  if (verifyCode == null) throw new Error('验证码无效')
   await verifyCodeRepostory.update({ phone }, { used: true });
 }
