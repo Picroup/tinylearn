@@ -36,5 +36,8 @@ export async function followUser(
     follow: true,
     tagKind: TagKind.user,
   });
+
+  await userRepository.increment({ id: userId }, 'followsCount', 1);
+  await userRepository.increment({ id: targetUserId }, 'followersCount', 1);
   return 'success';
 }
