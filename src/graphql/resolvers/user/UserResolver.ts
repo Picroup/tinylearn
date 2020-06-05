@@ -1,3 +1,4 @@
+import { ViewUserInput, viewUser } from './viewUser';
 import { UnmarkInput, unmark } from './unmark';
 import { MarkInput, mark } from './mark';
 import { SetMyImageURLInput, setMyImageURL } from './setMyImageURL';
@@ -127,4 +128,12 @@ export class UserResolver {
     return unmark(context, input);
   }
 
+  @Mutation(() => String)
+  async viewUser(
+    @Ctx() context: AppContext,
+    @Arg('input') input: ViewUserInput,
+  ): Promise<string> {
+    return viewUser(context, input);
+  }
+  
 }
