@@ -24,11 +24,12 @@ export async function up(
   const postRepository = connection.getRepository(PostEntity);
   const userId = getPayloadUserId(tokenPayload);
 
-  await postUserUpRepository.save({ userId, postId });
-
-  const post = await postRepository.findOneOrFail(postId);
-  await userRepository.increment({ id: userId }, 'upsCount', 1);
-  await userRepository.increment({ id: post.userId }, 'upedCount', 1);
-  
+  const exists = await postUserUpRepository.findOne({ userId, postId });
+  if (exists == null) {
+    await postUserUpRepository.insert({ userId, postId });
+    const post = await postRepository.findOneOrFail(postId);
+    await userRepository.increment({ id: userId }, 'upsCount', 1);
+    await userRepository.increment({ id: post.userId }, 'upedCount', 1);
+  }
   return 'success';
 }
