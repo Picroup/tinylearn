@@ -1,9 +1,5 @@
 import { ViewUserInput, viewUser } from './viewUser';
 import { SetMyImageURLInput, setMyImageURL } from './setMyImageURL';
-import { UnfollowUserInput, unfollowUser } from './unfollowUser';
-import { FollowUserInput, followUser } from './followUser';
-import { UnfollowTagInput, unfollowTag } from './unfollowTag';
-import { FollowTagInput, followTag } from './followTag';
 import { SetUsernameInput, setUsername } from './setUsername';
 import { IsUsernameAvaliableInput, isUsernameAvaliable } from './isUsernameAvaliable';
 import { GetVerifyCodeInput, getVerifyCode } from './getVerifyCode';
@@ -58,42 +54,6 @@ export class UserResolver {
     @Arg('input') input: SetMyImageURLInput,
   ): Promise<SessionInfo> {
     return setMyImageURL(context, input);
-  }
-
-  @Mutation(() => String)
-  @UseMiddleware(authorization)
-  async followUser(
-    @Ctx() context: AppContext,
-    @Arg('input') input: FollowUserInput,
-  ): Promise<string> {
-    return followUser(context, input);
-  }
-
-  @Mutation(() => String)
-  @UseMiddleware(authorization)
-  async unfollowUser(
-    @Ctx() context: AppContext,
-    @Arg('input') input: UnfollowUserInput,
-  ): Promise<string> {
-    return unfollowUser(context, input);
-  }
-
-  @Mutation(() => String)
-  @UseMiddleware(authorization)
-  async followTag(
-    @Ctx() context: AppContext,
-    @Arg('input') input: FollowTagInput,
-  ): Promise<string> {
-    return followTag(context, input);
-  }
-
-  @Mutation(() => String)
-  @UseMiddleware(authorization)
-  async unfollowTag(
-    @Ctx() context: AppContext,
-    @Arg('input') input: UnfollowTagInput,
-  ): Promise<string> {
-    return unfollowTag(context, input);
   }
 
   @Mutation(() => String)

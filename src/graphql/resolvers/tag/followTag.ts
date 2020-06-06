@@ -1,5 +1,5 @@
-import { TagKind } from './../../../entity/TagEntity';
-import { AppContext } from './../../../app/context';
+import { TagKind } from '../../../entity/TagEntity';
+import { AppContext } from '../../../app/context';
 import { InputType, Field } from "type-graphql";
 import { TagEntity } from '../../../entity/TagEntity';
 import { Repository, Connection } from 'typeorm';

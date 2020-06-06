@@ -1,4 +1,4 @@
-import { AppContext } from './../../../app/context';
+import { AppContext } from '../../../app/context';
 import { InputType, Field } from "type-graphql";
 import { _followTag } from './followTag';
 import { Connection } from 'typeorm';
