@@ -1,3 +1,4 @@
+import { ViewPostInput, viewPost } from './viewPost';
 import { User } from './../../types/User';
 import { Tag } from './../../types/Tag';
 import { CursorInput } from './../../../functional/graphql/CursorInput';
@@ -31,6 +32,14 @@ export class PostResolver {
     @Arg('input') input: CreatePostInput,
   ): Promise<string> {
     return createPost(context, input);
+  }
+
+  @Mutation(() => String)
+  async viewPost(
+    @Ctx() context: AppContext,
+    @Arg('input') input: ViewPostInput,
+  ): Promise<string> {
+    return viewPost(context, input);
   }
 
   @Query(returns => CursorPosts)
