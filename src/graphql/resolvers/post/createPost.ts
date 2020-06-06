@@ -4,7 +4,7 @@ import { TagEntity } from './../../../entity/TagEntity';
 import { DependencyContainer } from 'tsyringe';
 import { AppContext } from './../../../app/context';
 import { Field, InputType } from "type-graphql";
-import { Connection, InsertResult } from 'typeorm';
+import { Connection, InsertResult, In } from 'typeorm';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { PostEntity } from '../../../entity/PostEntity';
 import { Length } from 'class-validator';
@@ -41,7 +41,8 @@ export async function createPost(
 
   const post = await postRepository.save({ content, userId });
   await userRepository.increment({ id: userId }, 'postsCount', 1);
-  await createPostTagSums(container, tagNames, post.id);
+  await createPostTagSums(connection, tagNames, post.id);
+  await incrementTagsPostsCount(connection, tagNames);
   return post.id;
 }
 
@@ -120,11 +121,10 @@ function distinctTagNames(tagNames: ExtractTagNamesResult): ExtractTagNamesResul
 }
 
 async function createPostTagSums(
-  container: DependencyContainer,
+  connection: Connection,
   { userInputTagNames, autoDetectTagNames, detectUserTagNames }: ExtractTagNamesResult,
   postId: string,
 ): Promise<InsertResult> {
-  const connection = container.resolve(Connection);
   const postTagSumRepositry = connection.getRepository(PostTagSumEntity);
   
   function mapTagName(kind: PostTagSumKind): (tagName: string) => QueryDeepPartialEntity<PostTagSumEntity> {
@@ -136,6 +136,16 @@ async function createPostTagSums(
     ...autoDetectTagNames.map(mapTagName(PostTagSumKind.autoDetect)),
     ...detectUserTagNames.map(mapTagName(PostTagSumKind.detectUser)),
   ]);
+}
+
+async function incrementTagsPostsCount(connection: Connection, tagNames: ExtractTagNamesResult) {
+  const tagRepository = connection.getRepository(TagEntity);
+  const names = [
+    ...tagNames.userInputTagNames,
+    ...tagNames.autoDetectTagNames,
+    ...tagNames.detectUserTagNames,
+  ]
+  await tagRepository.increment({ name: In(names) }, 'postsCount', 1);
 }
 
 function filterTagWithContent(content: string): (tag: TagEntity) => boolean {
