@@ -1,6 +1,4 @@
 import { ViewUserInput, viewUser } from './viewUser';
-import { UnmarkInput, unmark } from './unmark';
-import { MarkInput, mark } from './mark';
 import { SetMyImageURLInput, setMyImageURL } from './setMyImageURL';
 import { UnfollowUserInput, unfollowUser } from './unfollowUser';
 import { FollowUserInput, followUser } from './followUser';
@@ -15,7 +13,6 @@ import { AppContext } from '../../../app/context';
 import { Resolver, Mutation, Arg, Ctx, UseMiddleware, Query } from "type-graphql";
 import { User } from '../../types/User';
 import { loginOrRegister, LoginOrRegisterInput } from './loginOrRegister';
-import { up, UpInput } from './up';
 
 @Resolver(User)
 export class UserResolver {
@@ -72,7 +69,6 @@ export class UserResolver {
     return followUser(context, input);
   }
 
-
   @Mutation(() => String)
   @UseMiddleware(authorization)
   async unfollowUser(
@@ -81,7 +77,6 @@ export class UserResolver {
   ): Promise<string> {
     return unfollowUser(context, input);
   }
-
 
   @Mutation(() => String)
   @UseMiddleware(authorization)
@@ -102,38 +97,10 @@ export class UserResolver {
   }
 
   @Mutation(() => String)
-  @UseMiddleware(authorization)
-  async up(
-    @Ctx() context: AppContext,
-    @Arg('input') input: UpInput,
-  ): Promise<string> {
-    return up(context, input);
-  }
-
-  @Mutation(() => String)
-  @UseMiddleware(authorization)
-  async mark(
-    @Ctx() context: AppContext,
-    @Arg('input') input: MarkInput,
-  ): Promise<string> {
-    return mark(context, input);
-  }
-
-  @Mutation(() => String)
-  @UseMiddleware(authorization)
-  async unmark(
-    @Ctx() context: AppContext,
-    @Arg('input') input: UnmarkInput,
-  ): Promise<string> {
-    return unmark(context, input);
-  }
-
-  @Mutation(() => String)
   async viewUser(
     @Ctx() context: AppContext,
     @Arg('input') input: ViewUserInput,
   ): Promise<string> {
     return viewUser(context, input);
   }
-  
 }

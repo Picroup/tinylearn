@@ -1,5 +1,5 @@
-import { PostEntity } from './../../../entity/PostEntity';
-import { PostUserMarkEntity } from './../../../entity/PostUserMarkEntity';
+import { PostEntity } from '../../../entity/PostEntity';
+import { PostUserMarkEntity } from '../../../entity/PostUserMarkEntity';
 import { InputType, Field } from "type-graphql";
 import { AppContext } from "../../../app/context";
 import { Connection } from "typeorm";

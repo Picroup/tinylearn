@@ -13,6 +13,9 @@ import { markedPosts } from './markedPosts';
 import { upPosts } from './upPosts';
 import { postTags, PostTagsInput } from './postTags';
 import { postUser } from './postUser';
+import { UpInput, up } from './up';
+import { MarkInput, mark } from './mark';
+import { UnmarkInput, unmark } from './unmark';
 
 @Resolver(Post)
 export class PostResolver {
@@ -23,23 +26,15 @@ export class PostResolver {
     @Root() post: Post,
   ): Promise<User | undefined> {
     return postUser(context, post);
-  } 
-
-  @Mutation(returns => String)
-  @UseMiddleware(authorization)
-  async createPost(
-    @Ctx() context: AppContext,
-    @Arg('input') input: CreatePostInput,
-  ): Promise<string> {
-    return createPost(context, input);
   }
 
-  @Mutation(() => String)
-  async viewPost(
+  @FieldResolver(() => [Tag])
+  async tags(
     @Ctx() context: AppContext,
-    @Arg('input') input: ViewPostInput,
-  ): Promise<string> {
-    return viewPost(context, input);
+    @Root() post: Post,
+    @Arg('input') input: PostTagsInput,
+  ): Promise<Tag[]> {
+    return postTags(context, post, input);
   }
 
   @Query(returns => CursorPosts)
@@ -69,12 +64,47 @@ export class PostResolver {
     return upPosts(context, input);
   }
 
-  @FieldResolver(() => [Tag])
-  async tags(
+  @Mutation(returns => String)
+  @UseMiddleware(authorization)
+  async createPost(
     @Ctx() context: AppContext,
-    @Root() post: Post,
-    @Arg('input') input: PostTagsInput,
-  ): Promise<Tag[]> {
-    return postTags(context, post, input);
+    @Arg('input') input: CreatePostInput,
+  ): Promise<string> {
+    return createPost(context, input);
+  }
+
+  @Mutation(() => String)
+  async viewPost(
+    @Ctx() context: AppContext,
+    @Arg('input') input: ViewPostInput,
+  ): Promise<string> {
+    return viewPost(context, input);
+  }
+
+  @Mutation(() => String)
+  @UseMiddleware(authorization)
+  async up(
+    @Ctx() context: AppContext,
+    @Arg('input') input: UpInput,
+  ): Promise<string> {
+    return up(context, input);
+  }
+
+  @Mutation(() => String)
+  @UseMiddleware(authorization)
+  async mark(
+    @Ctx() context: AppContext,
+    @Arg('input') input: MarkInput,
+  ): Promise<string> {
+    return mark(context, input);
+  }
+
+  @Mutation(() => String)
+  @UseMiddleware(authorization)
+  async unmark(
+    @Ctx() context: AppContext,
+    @Arg('input') input: UnmarkInput,
+  ): Promise<string> {
+    return unmark(context, input);
   }
 }

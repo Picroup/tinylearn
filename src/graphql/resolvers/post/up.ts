@@ -1,7 +1,7 @@
-import { PostEntity } from './../../../entity/PostEntity';
-import { PostUserUpEntity } from './../../../entity/PostUserUpEntity';
+import { PostEntity } from '../../../entity/PostEntity';
+import { PostUserUpEntity } from '../../../entity/PostUserUpEntity';
 import { Connection } from 'typeorm';
-import { AppContext } from './../../../app/context';
+import { AppContext } from '../../../app/context';
 import { InputType, Field } from "type-graphql";
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { UserEntity } from '../../../entity/UserEntity';
