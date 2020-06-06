@@ -34,6 +34,7 @@ export async function followTag(
   });
   if (hasEffect) {
     await userRepository.increment({ id: userId }, 'followsCount', 1);
+    await tagRepository.increment({ name: tagName }, 'followersCount', 1);
   }
   return 'success';
 }

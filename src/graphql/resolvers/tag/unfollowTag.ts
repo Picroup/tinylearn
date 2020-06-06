@@ -1,3 +1,4 @@
+import { TagEntity } from './../../../entity/TagEntity';
 import { AppContext } from '../../../app/context';
 import { InputType, Field } from "type-graphql";
 import { Connection } from 'typeorm';
@@ -20,6 +21,7 @@ export async function unfollowTag(
 
   const connection = container.resolve(Connection);
   const userRepository = connection.getRepository(UserEntity);
+  const tagRepository = connection.getRepository(TagEntity);
   const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
   const userId = getPayloadUserId(tokenPayload);
 
@@ -31,6 +33,7 @@ export async function unfollowTag(
 
   if (hasEffect) {
     await userRepository.decrement({ id: userId }, 'followsCount', 1);
+    await tagRepository.decrement({ name: tagName }, 'followersCount', 1);
   }
 
   return 'success';
