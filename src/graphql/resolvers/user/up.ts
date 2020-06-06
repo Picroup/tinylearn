@@ -28,6 +28,7 @@ export async function up(
   if (link == null) {
     await postUserUpRepository.insert({ userId, postId });
     const post = await postRepository.findOneOrFail(postId);
+    await postRepository.increment({ id: postId }, 'upsCount', 1);
     await userRepository.increment({ id: userId }, 'upsCount', 1);
     await userRepository.increment({ id: post.userId }, 'upedCount', 1);
   }
