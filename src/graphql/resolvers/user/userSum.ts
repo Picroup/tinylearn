@@ -1,4 +1,4 @@
-import { UserSumary } from './../../types/UserSum';
+import { UserSumary } from '../../types/UserSumary';
 import { AppContext } from './../../../app/context';
 import { User } from './../../types/User';
 import { EntityDataLoader } from '../../../functional/dataloader/EntityDataLoader';

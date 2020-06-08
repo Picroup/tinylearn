@@ -1,6 +1,6 @@
-import { UserSumary } from './../../types/UserSum';
-import { CursorInput } from './../../../functional/graphql/CursorInput';
-import { CursorNotifications } from './../../types/Nofification';
+import { UserSumary } from '../../types/UserSumary';
+import { CursorInput } from '../../../functional/graphql/CursorInput';
+import { CursorNotifications } from '../../types/Nofification';
 import { ViewUserInput, viewUser } from './viewUser';
 import { SetMyImageURLInput, setMyImageURL } from './setMyImageURL';
 import { SetUsernameInput, setUsername } from './setUsername';

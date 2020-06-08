@@ -1,5 +1,6 @@
+import { PostSumEntity } from './../entity/PostSumEntity';
 import { UserSumEntity } from './../entity/UserSumEntity';
-import { UserSumary } from './../graphql/types/UserSum';
+import { UserSumary } from '../graphql/types/UserSumary';
 import { UserEntity } from './../entity/UserEntity';
 import { EntityDataLoader } from './../functional/dataloader/EntityDataLoader';
 import { DependencyContainer, container } from "tsyringe";
@@ -32,6 +33,13 @@ export async function setupContainer(): Promise<DependencyContainer> {
       const connection = container.resolve(Connection);
       return new EntityDataLoader<string, UserSumEntity>(
         connection.getRepository(UserSumEntity),
+        entity => entity.id
+      );
+    }))
+    .register('EntityDataLoader<string, PostSumEntity>', lazyCachingFactory(container => {
+      const connection = container.resolve(Connection);
+      return new EntityDataLoader<string, PostSumEntity>(
+        connection.getRepository(PostSumEntity),
         entity => entity.id
       );
     }))
