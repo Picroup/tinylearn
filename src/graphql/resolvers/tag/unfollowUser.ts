@@ -1,11 +1,11 @@
-import { AppContext } from './../../../app/context';
+import { AppContext } from '../../../app/context';
 import { InputType, Field } from "type-graphql";
 import { Connection } from 'typeorm';
 import { UserEntity } from '../../../entity/UserEntity';
-import { TagEntity } from '../../../entity/TagEntity';
 import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
-import { followOrUnfollowTag } from './followTag';
+import { _unfollowTag } from './followTag';
+import { TagEntity } from '../../../entity/TagEntity';
 
 @InputType()
 export class UnfollowUserInput {
@@ -27,13 +27,16 @@ export async function unfollowUser(
 
   const { username, tagName } = await userRepository.findOneOrFail(targetUserId);
   if (tagName == null) throw new Error(`User ${username} tagName is null`);
-  await followOrUnfollowTag({
-    tagRepository,
+  const hasEffect = await _unfollowTag({
     userTagFollowRepository,
     userId,
     tagName,
-    follow: false
   });
 
+  if (hasEffect) {
+    await userRepository.decrement({ id: userId }, 'followsCount', 1);
+    await userRepository.decrement({ id: targetUserId }, 'followersCount', 1);
+    await tagRepository.decrement({ name: tagName }, 'followersCount', 1);
+  }
   return 'success';
 }

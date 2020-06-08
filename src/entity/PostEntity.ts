@@ -14,6 +14,17 @@ export class PostEntity extends MetaEntity {
   @Column({ type: 'text' })
   content: string;
 
+  // 分析
+
+  @Column({ type: 'int', default: 0, unsigned: true })
+  viewsCount: number = 0;
+
+  @Column({ type: 'int', default: 0, unsigned: true })
+  marksCount: number = 0;
+
+  @Column({ type: 'int', default: 0, unsigned: true })
+  upsCount: number = 0;
+
   // 关系
 
   @Column({ type: 'varchar', length: 36 })

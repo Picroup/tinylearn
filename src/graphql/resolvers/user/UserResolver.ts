@@ -1,10 +1,5 @@
-import { UnmarkInput, unmark } from './unmark';
-import { MarkInput, mark } from './mark';
+import { ViewUserInput, viewUser } from './viewUser';
 import { SetMyImageURLInput, setMyImageURL } from './setMyImageURL';
-import { UnfollowUserInput, unfollowUser } from './unfollowUser';
-import { FollowUserInput, followUser } from './followUser';
-import { UnfollowTagInput, unfollowTag } from './unfollowTag';
-import { FollowTagInput, followTag } from './followTag';
 import { SetUsernameInput, setUsername } from './setUsername';
 import { IsUsernameAvaliableInput, isUsernameAvaliable } from './isUsernameAvaliable';
 import { GetVerifyCodeInput, getVerifyCode } from './getVerifyCode';
@@ -14,7 +9,6 @@ import { AppContext } from '../../../app/context';
 import { Resolver, Mutation, Arg, Ctx, UseMiddleware, Query } from "type-graphql";
 import { User } from '../../types/User';
 import { loginOrRegister, LoginOrRegisterInput } from './loginOrRegister';
-import { up, UpInput } from './up';
 
 @Resolver(User)
 export class UserResolver {
@@ -63,68 +57,10 @@ export class UserResolver {
   }
 
   @Mutation(() => String)
-  @UseMiddleware(authorization)
-  async followUser(
+  async viewUser(
     @Ctx() context: AppContext,
-    @Arg('input') input: FollowUserInput,
+    @Arg('input') input: ViewUserInput,
   ): Promise<string> {
-    return followUser(context, input);
+    return viewUser(context, input);
   }
-
-
-  @Mutation(() => String)
-  @UseMiddleware(authorization)
-  async unfollowUser(
-    @Ctx() context: AppContext,
-    @Arg('input') input: UnfollowUserInput,
-  ): Promise<string> {
-    return unfollowUser(context, input);
-  }
-
-
-  @Mutation(() => String)
-  @UseMiddleware(authorization)
-  async followTag(
-    @Ctx() context: AppContext,
-    @Arg('input') input: FollowTagInput,
-  ): Promise<string> {
-    return followTag(context, input);
-  }
-
-  @Mutation(() => String)
-  @UseMiddleware(authorization)
-  async unfollowTag(
-    @Ctx() context: AppContext,
-    @Arg('input') input: UnfollowTagInput,
-  ): Promise<string> {
-    return unfollowTag(context, input);
-  }
-
-  @Mutation(() => String)
-  @UseMiddleware(authorization)
-  async up(
-    @Ctx() context: AppContext,
-    @Arg('input') input: UpInput,
-  ): Promise<string> {
-    return up(context, input);
-  }
-
-  @Mutation(() => String)
-  @UseMiddleware(authorization)
-  async mark(
-    @Ctx() context: AppContext,
-    @Arg('input') input: MarkInput,
-  ): Promise<string> {
-    return mark(context, input);
-  }
-
-  @Mutation(() => String)
-  @UseMiddleware(authorization)
-  async unmark(
-    @Ctx() context: AppContext,
-    @Arg('input') input: UnmarkInput,
-  ): Promise<string> {
-    return unmark(context, input);
-  }
-
 }

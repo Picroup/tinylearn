@@ -1,6 +1,6 @@
-import { AppContext } from './../../../app/context';
+import { AppContext } from '../../../app/context';
 import { InputType, Field } from "type-graphql";
-import { followOrUnfollowTag } from './followTag';
+import { _followTag } from './followTag';
 import { Connection } from 'typeorm';
 import { UserEntity } from '../../../entity/UserEntity';
 import { TagEntity, TagKind } from '../../../entity/TagEntity';
@@ -28,13 +28,18 @@ export async function followUser(
   const { username, tagName } = await userRepository.findOneOrFail(targetUserId);
   if (tagName == null) throw new Error(`User ${username} tagName is null`);
 
-  await followOrUnfollowTag({
+  const hasEffect = await _followTag({
     tagRepository,
     userTagFollowRepository,
     userId,
     tagName,
-    follow: true,
     tagKind: TagKind.user,
   });
+  
+  if (hasEffect) {
+    await userRepository.increment({ id: userId }, 'followsCount', 1);
+    await userRepository.increment({ id: targetUserId }, 'followersCount', 1);
+    await tagRepository.increment({ name: tagName }, 'followersCount', 1);
+  }
   return 'success';
 }

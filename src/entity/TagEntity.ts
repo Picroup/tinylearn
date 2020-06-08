@@ -30,6 +30,17 @@ export class TagEntity extends MetaEntity {
   @Column({ default: false })
   isAutoDetect: boolean;
 
+  // 分析
+
+  @Column({ type: 'int', default: 0, unsigned: true })
+  postsCount: number = 0;
+
+  @Column({ type: 'int', default: 0, unsigned: true })
+  postsViewsCount: number = 0;
+
+  @Column({ type: 'int', default: 0, unsigned: true })
+  followersCount: number = 0;
+
   // relationship
 
   @OneToOne(() => UserEntity, user => user.tag, {
