@@ -5,6 +5,9 @@ import { AppContext } from "../../../app/context";
 import { Connection } from "typeorm";
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { UserSumEntity } from '../../../entity/UserSumEntity';
+import { NotificationEntity } from '../../../entity/NotificationEntity';
+import { PostEntity } from '../../../entity/PostEntity';
+import { markPostNotification } from '../../../functional/db/notification';
 
 
 @InputType()
@@ -23,6 +26,8 @@ export async function mark(
   const postUserMarkRepository = connection.getRepository(PostUserMarkEntity);
   const userSumRepository = connection.getRepository(UserSumEntity);
   const postSumRepository = connection.getRepository(PostSumEntity);
+  const postRepository = connection.getRepository(PostEntity);
+  const notificationRepository = connection.getRepository(NotificationEntity);
   const userId = getPayloadUserId(tokenPayload);
 
   const link = await postUserMarkRepository.findOne({ userId, postId });
@@ -30,6 +35,17 @@ export async function mark(
     await postUserMarkRepository.insert({ userId, postId });
     await userSumRepository.increment({ id: userId }, 'marksCount', 1);
     await postSumRepository.increment({ id: postId }, 'marksCount', 1);
+    const notification = await notificationRepository.findOne({ markPostUserId: userId, markPostPostId: postId });
+    if (notification == null) {
+      const post = await postRepository.findOneOrFail(postId);
+      const targetUserId = post.userId;
+      await notificationRepository.insert(markPostNotification({
+        targetUserId,
+        userId,
+        postId,
+      }));
+      // TODO: 增加用户未读通知数量，发推送通知
+    }
   }
   return 'success';
 }

@@ -23,13 +23,13 @@ export function upPostNotification(
   };
 }
 
-// export function markPostNotification(
-//   { targetUserId, userId, tagName }: { targetUserId: string; userId: string; tagName: string; },
-// ): QueryDeepPartialEntity<NotificationEntity> {
-//   return {
-//     kind: NotificationKind.markPost,
-//     targetUserId,
-//     followUserUserId: userId,
-//     followUserTagName: tagName,
-//   };
-// }
+export function markPostNotification(
+  { targetUserId, userId, postId }: { targetUserId: string; userId: string; postId: string; },
+): QueryDeepPartialEntity<NotificationEntity> {
+  return {
+    kind: NotificationKind.markPost,
+    targetUserId,
+    markPostUserId: userId,
+    markPostPostId: postId,
+  };
+}

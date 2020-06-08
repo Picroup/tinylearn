@@ -1,3 +1,4 @@
+import { PostUserMarkEntity } from './PostUserMarkEntity';
 import { PostUserUpEntity } from './PostUserUpEntity';
 import { UserTagFollowEntity } from './UserTagFollowEntity';
 import { UserEntity } from './UserEntity';
@@ -60,4 +61,17 @@ export class NotificationEntity extends MetaEntity {
   ])
   postUserUp?: PostUserUpEntity;
 
+
+  @Column({ type: 'varchar', length: 36, nullable: true })
+  markPostUserId?: string;
+  @Column({ type: 'varchar', length: 36, nullable: true })
+  markPostPostId?: string;
+
+  @ManyToOne(() => PostUserMarkEntity, mark => mark.notifications, { eager: true })
+  @JoinColumn([
+    { name: 'markPostUserId', referencedColumnName: 'userId' },
+    { name: 'markPostPostId', referencedColumnName: 'postId' },
+  ])
+  postUserMark?: PostUserMarkEntity;
+  
 }
