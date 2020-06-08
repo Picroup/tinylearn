@@ -1,10 +1,10 @@
+import { NotificationEntity, NotificationKind } from './../../../entity/NotificationEntity';
 import { AppContext } from '../../../app/context';
 import { InputType, Field } from "type-graphql";
 import { _followTag } from './followTag';
 import { Connection } from 'typeorm';
 import { UserEntity } from '../../../entity/UserEntity';
-import { TagEntity, TagKind } from '../../../entity/TagEntity';
-import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
+import { TagKind } from '../../../entity/TagEntity';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { UserSumEntity } from '../../../entity/UserSumEntity';
 import { TagSumEntity } from '../../../entity/TagSumEntity';
@@ -25,6 +25,7 @@ export async function followUser(
   const userRepository = connection.getRepository(UserEntity);
   const userSumRepository = connection.getRepository(UserSumEntity);
   const tagSumRepository = connection.getRepository(TagSumEntity);
+  const notificationRepository = connection.getRepository(NotificationEntity);
   const userId = getPayloadUserId(tokenPayload);
 
   const { username, tagName } = await userRepository.findOneOrFail(targetUserId);
@@ -41,6 +42,16 @@ export async function followUser(
     await userSumRepository.increment({ id: userId }, 'followsCount', 1);
     await userSumRepository.increment({ id: targetUserId }, 'followersCount', 1);
     await tagSumRepository.increment({ name: tagName }, 'followersCount', 1);
+    const notification = await notificationRepository.findOne({ followUserUserId: userId, followUserTagName: tagName });
+    if (notification == null) {
+      await notificationRepository.insert({ 
+        kind: NotificationKind.followUser, 
+        targetUserId,
+        followUserUserId: userId,
+        followUserTagName: tagName,
+      });
+      // TODO: 增加用户未读通知数量，发推送通知
+    }
   }
   return 'success';
 }

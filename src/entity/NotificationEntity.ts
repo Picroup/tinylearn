@@ -15,7 +15,6 @@ export class NotificationEntity extends MetaEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-
   @Column({
     type: 'enum',
     enum: NotificationKind,
@@ -47,5 +46,5 @@ export class NotificationEntity extends MetaEntity {
   ])
   userTagFollow?: UserTagFollowEntity; 
 
-  
+
 }
