@@ -1,3 +1,4 @@
+import { PostSumEntity } from './../../../entity/PostSumEntity';
 import { PostTagSumEntity, PostTagSumKind } from './../../../entity/PostTagSumEntity';
 import { UserEntity } from './../../../entity/UserEntity';
 import { TagEntity } from './../../../entity/TagEntity';
@@ -29,6 +30,7 @@ export async function createPost(
 ): Promise<string> {
   const connection = container.resolve(Connection);
   const postRepository = connection.getRepository(PostEntity);
+  const postSumRepository = connection.getRepository(PostSumEntity);
   const userSumRepository = connection.getRepository(UserSumEntity);
   const userId = getPayloadUserId(tokenPayload);
 
@@ -41,11 +43,13 @@ export async function createPost(
     return distinctTagNames(_tagNames);
   })()
 
-  const post = await postRepository.save({ content, userId });
+  const result = await postRepository.insert({ content, userId });
+  const postId = result.identifiers[0]['id'] as string;
+  await postSumRepository.insert({ id: postId });
   await userSumRepository.increment({ id: userId }, 'postsCount', 1);
-  await createPostTagSums(connection, tagNames, post.id);
+  await createPostTagSums(connection, tagNames, postId);
   await incrementTagsPostsCount(connection, tagNames);
-  return post.id;
+  return postId;
 }
 
 type ExtractTagNamesResult = {
@@ -77,7 +81,7 @@ async function extractTagNames(
         .where('find_in_set(:keyword, tag.keywords) <> 0', { keyword: tagNameToKeyword(tagName) })
         .getOne();
       if (tag == null) {
-        await insertTag(tagRepositry, { name: tagName });
+        await insertTag(connection, { name: tagName });
         result.push(tagName);
       } else {
         result.push(tag.name);

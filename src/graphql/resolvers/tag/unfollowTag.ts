@@ -2,7 +2,6 @@ import { TagSumEntity } from './../../../entity/TagSumEntity';
 import { AppContext } from '../../../app/context';
 import { InputType, Field } from "type-graphql";
 import { Connection } from 'typeorm';
-import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { _unfollowTag } from './followTag';
 import { UserSumEntity } from '../../../entity/UserSumEntity';
@@ -22,11 +21,10 @@ export async function unfollowTag(
   const connection = container.resolve(Connection);
   const userSumRepository = connection.getRepository(UserSumEntity);
   const tagSumRepository = connection.getRepository(TagSumEntity);
-  const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
   const userId = getPayloadUserId(tokenPayload);
 
   const hasEffect = await _unfollowTag({
-    userTagFollowRepository,
+    connection,
     userId,
     tagName,
   });

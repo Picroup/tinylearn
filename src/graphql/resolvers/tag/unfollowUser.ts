@@ -2,7 +2,6 @@ import { AppContext } from '../../../app/context';
 import { InputType, Field } from "type-graphql";
 import { Connection } from 'typeorm';
 import { UserEntity } from '../../../entity/UserEntity';
-import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { _unfollowTag } from './followTag';
 import { UserSumEntity } from '../../../entity/UserSumEntity';
@@ -24,13 +23,12 @@ export async function unfollowUser(
   const userRepository = connection.getRepository(UserEntity);
   const userSumRepository = connection.getRepository(UserSumEntity);
   const tagSumRepository = connection.getRepository(TagSumEntity);
-  const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
   const userId = getPayloadUserId(tokenPayload);
 
   const { username, tagName } = await userRepository.findOneOrFail(targetUserId);
   if (tagName == null) throw new Error(`User ${username} tagName is null`);
   const hasEffect = await _unfollowTag({
-    userTagFollowRepository,
+    connection,
     userId,
     tagName,
   });

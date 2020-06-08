@@ -2,7 +2,7 @@ import { TagKind } from '../../../entity/TagEntity';
 import { AppContext } from '../../../app/context';
 import { InputType, Field } from "type-graphql";
 import { TagEntity } from '../../../entity/TagEntity';
-import { Repository, Connection } from 'typeorm';
+import { Connection } from 'typeorm';
 import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { insertTag } from '../../../functional/db/tag';
@@ -23,14 +23,11 @@ export async function followTag(
 
   const connection = container.resolve(Connection);
   const userSumRepository = connection.getRepository(UserSumEntity);
-  const tagRepository = connection.getRepository(TagEntity);
   const tagSumRepository = connection.getRepository(TagSumEntity);
-  const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
   const userId = getPayloadUserId(tokenPayload);
 
   const hasEffect = await _followTag({
-    tagRepository,
-    userTagFollowRepository,
+    connection,
     userId,
     tagName,
   });
@@ -42,21 +39,22 @@ export async function followTag(
 }
 
 export async function _followTag({
-  tagRepository,
-  userTagFollowRepository,
+  connection,
   userId,
   tagName,
   tagKind, 
 }: {
-  tagRepository: Repository<TagEntity>;
-  userTagFollowRepository: Repository<UserTagFollowEntity>;
+  connection: Connection,
   userId: string;
   tagName: string;
   tagKind?: TagKind;
 }): Promise<boolean> {
+  const tagRepository = connection.getRepository(TagEntity);
+  const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
+  
   const tag = await tagRepository.findOne({ name: tagName });
   if (tag == null) {
-    await insertTag(tagRepository, { name: tagName, kind: tagKind });
+    await insertTag(connection, { name: tagName, kind: tagKind });
   }
   const link = await userTagFollowRepository.findOne({ userId, tagName });
   if (link == null) {
@@ -67,14 +65,16 @@ export async function _followTag({
 }
 
 export async function _unfollowTag({
-  userTagFollowRepository,
+  connection,
   userId,
   tagName,
 }: {
-  userTagFollowRepository: Repository<UserTagFollowEntity>;
+  connection: Connection,
   userId: string;
   tagName: string;
 }): Promise<boolean> {
+  const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
+
   const link = await userTagFollowRepository.findOne({ userId, tagName });
   if (link != null) {
     await userTagFollowRepository.delete({ userId, tagName });

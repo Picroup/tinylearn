@@ -24,17 +24,14 @@ export async function followUser(
   const connection = container.resolve(Connection);
   const userRepository = connection.getRepository(UserEntity);
   const userSumRepository = connection.getRepository(UserSumEntity);
-  const tagRepository = connection.getRepository(TagEntity);
   const tagSumRepository = connection.getRepository(TagSumEntity);
-  const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
   const userId = getPayloadUserId(tokenPayload);
 
   const { username, tagName } = await userRepository.findOneOrFail(targetUserId);
   if (tagName == null) throw new Error(`User ${username} tagName is null`);
 
   const hasEffect = await _followTag({
-    tagRepository,
-    userTagFollowRepository,
+    connection,
     userId,
     tagName,
     tagKind: TagKind.user,
