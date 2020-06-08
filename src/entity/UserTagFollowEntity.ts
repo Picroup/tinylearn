@@ -1,5 +1,6 @@
+import { NotificationEntity } from './NotificationEntity';
 import { UserEntity } from './UserEntity';
-import { Entity, PrimaryColumn, ManyToOne } from "typeorm";
+import { Entity, PrimaryColumn, ManyToOne, OneToMany } from "typeorm";
 import { MetaEntity } from "../functional/entity/MetaEntity";
 import { TagEntity } from './TagEntity';
 
@@ -8,13 +9,16 @@ import { TagEntity } from './TagEntity';
 export class UserTagFollowEntity extends MetaEntity {
 
   @PrimaryColumn({ type: 'varchar', length: 36 })
-  userId: string
+  userId: string;
 
   @PrimaryColumn()
-  tagName: string
+  tagName: string;
 
   @ManyToOne(() => UserEntity, user => user.userTagFollows)
   user?: UserEntity;
   @ManyToOne(() => TagEntity, tag => tag.userTagFollows, { onUpdate: 'CASCADE' })
   tag?: TagEntity;
+
+  @OneToMany(() => NotificationEntity, notification => notification.userTagFollow)
+  notifications: NotificationEntity[];
 }
