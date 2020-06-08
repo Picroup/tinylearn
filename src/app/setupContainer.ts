@@ -1,6 +1,6 @@
 import { UserEntity } from './../entity/UserEntity';
 import { EntityDataLoader } from './../functional/dataloader/EntityDataLoader';
-import { DependencyContainer, container, instanceCachingFactory } from "tsyringe";
+import { DependencyContainer, container } from "tsyringe";
 import { createConnection, Connection } from "typeorm";
 import AliClient = require('@alicloud/pop-core');
 import { ALICLOUD_ACCESS_KEY, ALICLOUD_SECRET_KEY } from "./env";

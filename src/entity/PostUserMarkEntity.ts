@@ -1,4 +1,5 @@
-import { Entity, PrimaryColumn, ManyToOne } from "typeorm";
+import { NotificationEntity } from './NotificationEntity';
+import { Entity, PrimaryColumn, ManyToOne, OneToMany } from "typeorm";
 import { MetaEntity } from "../functional/entity/MetaEntity";
 import { PostEntity } from "./PostEntity";
 import { UserEntity } from "./UserEntity";
@@ -14,8 +15,9 @@ export class PostUserMarkEntity extends MetaEntity {
   postId: string;
 
   @ManyToOne(() => PostEntity, post => post.postUserMarks)
-  post?: PostEntity
+  post?: PostEntity;
 
   @ManyToOne(() => UserEntity, user => user.postUserMarks)
-  user?: UserEntity
+  user?: UserEntity;
+
 }

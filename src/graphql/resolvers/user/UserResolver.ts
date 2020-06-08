@@ -1,3 +1,5 @@
+import { CursorInput } from './../../../functional/graphql/CursorInput';
+import { CursorNotifications } from './../../types/Nofification';
 import { ViewUserInput, viewUser } from './viewUser';
 import { SetMyImageURLInput, setMyImageURL } from './setMyImageURL';
 import { SetUsernameInput, setUsername } from './setUsername';
@@ -9,9 +11,20 @@ import { AppContext } from '../../../app/context';
 import { Resolver, Mutation, Arg, Ctx, UseMiddleware, Query } from "type-graphql";
 import { User } from '../../types/User';
 import { loginOrRegister, LoginOrRegisterInput } from './loginOrRegister';
+import { markAllNotificationsAsRead } from './markAllNotificationsReaded';
+import { notifications } from './notifications';
 
 @Resolver(User)
 export class UserResolver {
+
+  @Query(() => CursorNotifications)
+  @UseMiddleware(authorization)
+  async notifications(
+    @Ctx() context: AppContext,
+    @Arg('input') input: CursorInput,
+  ): Promise<CursorNotifications> {
+    return notifications(context, input);
+  }
 
   @Mutation(() => String)
   async getVerifyCode(
@@ -62,5 +75,13 @@ export class UserResolver {
     @Arg('input') input: ViewUserInput,
   ): Promise<string> {
     return viewUser(context, input);
+  }
+
+  @Mutation(() => String)
+  @UseMiddleware(authorization)
+  async markAllNotificationsAsRead(
+    @Ctx() context: AppContext,
+  ): Promise<string> {
+    return markAllNotificationsAsRead(context);
   }
 }

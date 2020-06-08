@@ -1,7 +1,8 @@
 import { UserEntity } from './UserEntity';
-import { Entity, PrimaryColumn, ManyToOne } from "typeorm";
+import { Entity, PrimaryColumn, ManyToOne, OneToMany } from "typeorm";
 import { MetaEntity } from "../functional/entity/MetaEntity";
 import { PostEntity } from "./PostEntity";
+import { NotificationEntity } from './NotificationEntity';
 
 @Entity()
 export class PostUserUpEntity extends MetaEntity {

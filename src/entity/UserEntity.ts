@@ -1,3 +1,4 @@
+import { NotificationEntity } from './NotificationEntity';
 import { UserSumEntity } from './UserSumEntity';
 import { TagEntity } from './TagEntity';
 import { PostUserMarkEntity } from './PostUserMarkEntity';
@@ -37,6 +38,9 @@ export class UserEntity extends MetaEntity {
   @OneToOne(() => TagEntity, tag => tag.user, { onUpdate: 'CASCADE' })
   @JoinColumn()
   tag?: TagEntity;
+
+  @OneToMany(() => NotificationEntity, notification => notification.targetUser)
+  notifications: NotificationEntity[];
 
   @OneToMany(() => UserTagFollowEntity, follow => follow.user)
   userTagFollows: UserTagFollowEntity[];
