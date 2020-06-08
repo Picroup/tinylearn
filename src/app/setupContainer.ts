@@ -1,3 +1,7 @@
+import { TagSumEntity } from './../entity/TagSumEntity';
+import { PostSumEntity } from './../entity/PostSumEntity';
+import { UserSumEntity } from './../entity/UserSumEntity';
+import { UserSumary } from '../graphql/types/UserSumary';
 import { UserEntity } from './../entity/UserEntity';
 import { EntityDataLoader } from './../functional/dataloader/EntityDataLoader';
 import { DependencyContainer, container } from "tsyringe";
@@ -24,6 +28,27 @@ export async function setupContainer(): Promise<DependencyContainer> {
       return new EntityDataLoader<string, UserEntity>(
         connection.getRepository(UserEntity), 
         entity => entity.id
+      );
+    }))
+    .register('EntityDataLoader<string, UserSumEntity>', lazyCachingFactory(container => {
+      const connection = container.resolve(Connection);
+      return new EntityDataLoader<string, UserSumEntity>(
+        connection.getRepository(UserSumEntity),
+        entity => entity.id
+      );
+    }))
+    .register('EntityDataLoader<string, PostSumEntity>', lazyCachingFactory(container => {
+      const connection = container.resolve(Connection);
+      return new EntityDataLoader<string, PostSumEntity>(
+        connection.getRepository(PostSumEntity),
+        entity => entity.id
+      );
+    }))
+    .register('EntityDataLoader<string, TagSumEntity>', lazyCachingFactory(container => {
+      const connection = container.resolve(Connection);
+      return new EntityDataLoader<string, TagSumEntity>(
+        connection.getRepository(TagSumEntity),
+        entity => entity.name
       );
     }))
     .register(AliClient, { useValue: aliClient });

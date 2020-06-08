@@ -15,7 +15,7 @@ export class TagSumEntity extends MetaEntity {
   postsCount: number = 0;
 
   @Column({ type: 'int', default: 0, unsigned: true })
-  postsiewsCount: number = 0;
+  postsViewsCount: number = 0;
 
   @Column({ type: 'int', default: 0, unsigned: true })
   followersCount: number = 0;

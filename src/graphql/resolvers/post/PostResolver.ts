@@ -1,3 +1,4 @@
+import { PostSumary } from './../../types/PostSumary';
 import { ViewPostInput, viewPost } from './viewPost';
 import { User } from './../../types/User';
 import { Tag } from './../../types/Tag';
@@ -16,6 +17,7 @@ import { postUser } from './postUser';
 import { UpInput, up } from './up';
 import { MarkInput, mark } from './mark';
 import { UnmarkInput, unmark } from './unmark';
+import { postSumary } from './postSumary';
 
 @Resolver(Post)
 export class PostResolver {
@@ -35,6 +37,14 @@ export class PostResolver {
     @Arg('input') input: PostTagsInput,
   ): Promise<Tag[]> {
     return postTags(context, post, input);
+  }
+
+  @FieldResolver(() => PostSumary)
+  async sum(
+    @Ctx() context: AppContext,
+    @Root() post: Post,
+  ): Promise<PostSumary> {
+    return postSumary(context, post);
   }
 
   @Query(returns => CursorPosts)

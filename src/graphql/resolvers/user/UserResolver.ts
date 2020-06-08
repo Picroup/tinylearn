@@ -1,5 +1,6 @@
-import { CursorInput } from './../../../functional/graphql/CursorInput';
-import { CursorNotifications } from './../../types/Nofification';
+import { UserSumary } from '../../types/UserSumary';
+import { CursorInput } from '../../../functional/graphql/CursorInput';
+import { CursorNotifications } from '../../types/Nofification';
 import { ViewUserInput, viewUser } from './viewUser';
 import { SetMyImageURLInput, setMyImageURL } from './setMyImageURL';
 import { SetUsernameInput, setUsername } from './setUsername';
@@ -8,14 +9,23 @@ import { GetVerifyCodeInput, getVerifyCode } from './getVerifyCode';
 import { authorization } from '../../middlewares/Authorization';
 import { SessionInfo } from '../../types/SessionInfo';
 import { AppContext } from '../../../app/context';
-import { Resolver, Mutation, Arg, Ctx, UseMiddleware, Query } from "type-graphql";
+import { Resolver, Mutation, Arg, Ctx, UseMiddleware, Query, FieldResolver, Root } from "type-graphql";
 import { User } from '../../types/User';
 import { loginOrRegister, LoginOrRegisterInput } from './loginOrRegister';
 import { markAllNotificationsAsRead } from './markAllNotificationsReaded';
 import { notifications } from './notifications';
+import { userSum } from './userSum';
 
 @Resolver(User)
 export class UserResolver {
+
+  @FieldResolver(() => UserSumary)
+  async sum(
+    @Ctx() context: AppContext,
+    @Root() user: User,
+  ): Promise<UserSumary> {
+    return userSum(context, user);
+  }
 
   @Query(() => CursorNotifications)
   @UseMiddleware(authorization)
