@@ -1,3 +1,4 @@
+import { TagSumEntity } from './../entity/TagSumEntity';
 import { PostSumEntity } from './../entity/PostSumEntity';
 import { UserSumEntity } from './../entity/UserSumEntity';
 import { UserSumary } from '../graphql/types/UserSumary';
@@ -41,6 +42,13 @@ export async function setupContainer(): Promise<DependencyContainer> {
       return new EntityDataLoader<string, PostSumEntity>(
         connection.getRepository(PostSumEntity),
         entity => entity.id
+      );
+    }))
+    .register('EntityDataLoader<string, TagSumEntity>', lazyCachingFactory(container => {
+      const connection = container.resolve(Connection);
+      return new EntityDataLoader<string, TagSumEntity>(
+        connection.getRepository(TagSumEntity),
+        entity => entity.name
       );
     }))
     .register(AliClient, { useValue: aliClient });

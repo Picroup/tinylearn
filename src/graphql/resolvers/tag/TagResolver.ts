@@ -1,3 +1,4 @@
+import { TagSumary } from './../../types/TagSumary';
 import { FollowUserInput, followUser } from './followUser';
 import { authorization } from './../../middlewares/Authorization';
 import { tags } from './tags';
@@ -12,6 +13,7 @@ import { TagInput, tag } from './tag';
 import { UnfollowUserInput, unfollowUser } from './unfollowUser';
 import { FollowTagInput, followTag } from './followTag';
 import { UnfollowTagInput, unfollowTag } from './unfollowTag';
+import { tagSum } from './tagSum';
 
 @Resolver(Tag)
 export class TagResolver {
@@ -23,6 +25,14 @@ export class TagResolver {
     @Arg('input') input: CursorInput,
   ): Promise<CursorPosts> {
     return tagPosts(context, tag, input)
+  }
+
+  @FieldResolver(() => TagSumary)
+  async sum(
+    @Ctx() context: AppContext,
+    @Root() tag: Tag,
+  ): Promise<TagSumary> {
+    return tagSum(context, tag);
   }
 
   @Query(() => Tag, { nullable: true })
