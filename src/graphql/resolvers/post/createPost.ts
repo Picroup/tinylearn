@@ -12,6 +12,7 @@ import { insertTag } from '../../../functional/db/tag';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { tagNameToKeyword } from '../../../functional/tag/tagNameToKeyword';
 import { isUserInputTag } from '../../../functional/tag/isUserInputTag';
+import { UserSumEntity } from '../../../entity/UserSumEntity';
 
 @InputType()
 export class CreatePostInput {
@@ -27,7 +28,7 @@ export async function createPost(
 ): Promise<string> {
   const connection = container.resolve(Connection);
   const postRepository = connection.getRepository(PostEntity);
-  const userRepository = connection.getRepository(UserEntity);
+  const userSumRepository = connection.getRepository(UserSumEntity);
   const userId = getPayloadUserId(tokenPayload);
 
   const tagNames = await (async () => {
@@ -40,7 +41,7 @@ export async function createPost(
   })()
 
   const post = await postRepository.save({ content, userId });
-  await userRepository.increment({ id: userId }, 'postsCount', 1);
+  await userSumRepository.increment({ id: userId }, 'postsCount', 1);
   await createPostTagSums(connection, tagNames, post.id);
   await incrementTagsPostsCount(connection, tagNames);
   return post.id;

@@ -5,7 +5,7 @@ import { Connection } from 'typeorm';
 import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { _unfollowTag } from './followTag';
-import { UserEntity } from '../../../entity/UserEntity';
+import { UserSumEntity } from '../../../entity/UserSumEntity';
 
 @InputType()
 export class UnfollowTagInput {
@@ -20,7 +20,7 @@ export async function unfollowTag(
 ): Promise<string> {
 
   const connection = container.resolve(Connection);
-  const userRepository = connection.getRepository(UserEntity);
+  const userSumRepository = connection.getRepository(UserSumEntity);
   const tagRepository = connection.getRepository(TagEntity);
   const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
   const userId = getPayloadUserId(tokenPayload);
@@ -32,7 +32,7 @@ export async function unfollowTag(
   });
 
   if (hasEffect) {
-    await userRepository.decrement({ id: userId }, 'followsCount', 1);
+    await userSumRepository.decrement({ id: userId }, 'followsCount', 1);
     await tagRepository.decrement({ name: tagName }, 'followersCount', 1);
   }
 

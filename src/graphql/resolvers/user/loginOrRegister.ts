@@ -1,3 +1,4 @@
+import { UserSumEntity } from './../../../entity/UserSumEntity';
 import { SessionInfo } from './../../types/SessionInfo';
 import { AppContext } from './../../../app/context';
 import { InputType, Field } from "type-graphql";
@@ -24,6 +25,7 @@ export async function loginOrRegister(
 ): Promise<SessionInfo> {
   const connection = container.resolve(Connection);
   const userRepository = connection.getRepository(UserEntity);
+  const userSumRepository = connection.getRepository(UserSumEntity);
   const verifyCodeRepository = connection.getRepository(VerifyCodeEntity);
   await verifyCode(verifyCodeRepository, phone, code, new Date());
 
@@ -32,12 +34,16 @@ export async function loginOrRegister(
 
   const imageURL = randomImageURL();
 
-  const newUser = await userRepository.save({
+  await userRepository.insert({
     phone,
     username: uuidv4(),
     hasSetUsername: false,
     imageURL,    
   });
+
+  const newUser = await userRepository.findOneOrFail({ phone });
+  await userSumRepository.insert({ id: newUser.id });
+  
   return sessionInfo(newUser);
 }
 

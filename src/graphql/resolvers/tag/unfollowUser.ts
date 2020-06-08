@@ -6,6 +6,7 @@ import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { _unfollowTag } from './followTag';
 import { TagEntity } from '../../../entity/TagEntity';
+import { UserSumEntity } from '../../../entity/UserSumEntity';
 
 @InputType()
 export class UnfollowUserInput {
@@ -21,6 +22,7 @@ export async function unfollowUser(
   
   const connection = container.resolve(Connection);
   const userRepository = connection.getRepository(UserEntity);
+  const userSumRepository = connection.getRepository(UserSumEntity);
   const tagRepository = connection.getRepository(TagEntity);
   const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
   const userId = getPayloadUserId(tokenPayload);
@@ -34,8 +36,8 @@ export async function unfollowUser(
   });
 
   if (hasEffect) {
-    await userRepository.decrement({ id: userId }, 'followsCount', 1);
-    await userRepository.decrement({ id: targetUserId }, 'followersCount', 1);
+    await userSumRepository.decrement({ id: userId }, 'followsCount', 1);
+    await userSumRepository.decrement({ id: targetUserId }, 'followersCount', 1);
     await tagRepository.decrement({ name: tagName }, 'followersCount', 1);
   }
   return 'success';

@@ -1,7 +1,7 @@
 import { AppContext } from './../../../app/context';
 import { InputType, Field } from 'type-graphql';
 import { Connection } from 'typeorm';
-import { UserEntity } from '../../../entity/UserEntity';
+import { UserSumEntity } from '../../../entity/UserSumEntity';
 
 
 @InputType() 
@@ -17,8 +17,8 @@ export async function viewUser(
   { targetUserId }: ViewUserInput,
 ): Promise<string> {
   const connection = container.resolve(Connection);
-  const userRepository = connection.getRepository(UserEntity);
-  await userRepository.increment({ id: targetUserId }, 'viewsCount', 1);
+  const userSumRepository = connection.getRepository(UserSumEntity);
+  await userSumRepository.increment({ id: targetUserId }, 'viewsCount', 1);
   return 'success';
 }
 

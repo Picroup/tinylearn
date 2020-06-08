@@ -6,7 +6,7 @@ import { Repository, Connection } from 'typeorm';
 import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { insertTag } from '../../../functional/db/tag';
-import { UserEntity } from '../../../entity/UserEntity';
+import { UserSumEntity } from '../../../entity/UserSumEntity';
 
 @InputType()
 export class FollowTagInput {
@@ -21,7 +21,7 @@ export async function followTag(
 ): Promise<string> {
 
   const connection = container.resolve(Connection);
-  const userRepository = connection.getRepository(UserEntity);
+  const userSumRepository = connection.getRepository(UserSumEntity);
   const tagRepository = connection.getRepository(TagEntity);
   const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
   const userId = getPayloadUserId(tokenPayload);
@@ -33,7 +33,7 @@ export async function followTag(
     tagName,
   });
   if (hasEffect) {
-    await userRepository.increment({ id: userId }, 'followsCount', 1);
+    await userSumRepository.increment({ id: userId }, 'followsCount', 1);
     await tagRepository.increment({ name: tagName }, 'followersCount', 1);
   }
   return 'success';
