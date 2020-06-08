@@ -44,7 +44,8 @@ export async function up(
         userId,
         postId
       }));
-      // TODO: 增加用户未读通知数量，发推送通知
+      // TODO: 发推送通知
+      await userSumRepository.increment({ id: targetUserId }, 'unreadNotificationsCount', 1);
     }
   }
   return 'success';

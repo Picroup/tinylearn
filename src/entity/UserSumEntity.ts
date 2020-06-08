@@ -9,6 +9,9 @@ export class UserSumEntity extends MetaEntity {
   id: string;
 
   @Column({ type: 'int', default: 0, unsigned: true })
+  unreadNotificationsCount: number = 0;
+
+  @Column({ type: 'int', default: 0, unsigned: true })
   postsCount: number = 0;
 
   @Column({ type: 'int', default: 0, unsigned: true })
