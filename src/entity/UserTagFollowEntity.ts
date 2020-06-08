@@ -19,6 +19,4 @@ export class UserTagFollowEntity extends MetaEntity {
   @ManyToOne(() => TagEntity, tag => tag.userTagFollows, { onUpdate: 'CASCADE' })
   tag?: TagEntity;
 
-  @OneToMany(() => NotificationEntity, notification => notification.userTagFollow)
-  notifications: NotificationEntity[];
 }

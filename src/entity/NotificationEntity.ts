@@ -1,3 +1,5 @@
+import { PostEntity } from './PostEntity';
+import { TagEntity } from './TagEntity';
 import { PostUserMarkEntity } from './PostUserMarkEntity';
 import { PostUserUpEntity } from './PostUserUpEntity';
 import { UserTagFollowEntity } from './UserTagFollowEntity';
@@ -30,48 +32,47 @@ export class NotificationEntity extends MetaEntity {
 
   @Column()
   targetUserId: string;
-
   @ManyToOne(() => UserEntity, user => user.notifications)
   @JoinColumn({ name: 'targetUserId' })
   targetUser?: UserEntity;
 
-
+  // followUser
   @Column({ type: 'varchar', length: 36, nullable: true })
   followUserUserId?: string;
+  @ManyToOne(() => UserEntity, { eager: true })
+  @JoinColumn({ name: 'followUserUserId' })
+  followUserKindUser?: UserEntity;
+
   @Column({ nullable: true })
   followUserTagName: string;
+  @ManyToOne(() => TagEntity, { eager: true })
+  @JoinColumn({ name: 'followUserTagName' })
+  followUserKindTag?: TagEntity;
 
-  @ManyToOne(() => UserTagFollowEntity, follow => follow.notifications, { eager: true })
-  @JoinColumn([
-    { name: 'followUserUserId', referencedColumnName: 'userId' },
-    { name: 'followUserTagName', referencedColumnName: 'tagName' },
-  ])
-  userTagFollow?: UserTagFollowEntity; 
-
-
+  // upPost
   @Column({ type: 'varchar', length: 36, nullable: true })
   upPostUserId?: string;
+  @ManyToOne(() => UserEntity, { eager: true })
+  @JoinColumn({ name: 'upPostUserId' })
+  upPostUser?: UserEntity;
+
   @Column({ type: 'varchar', length: 36, nullable: true })
   upPostPostId?: string;
+  @ManyToOne(() => PostEntity, { eager: true })
+  @JoinColumn({ name: 'upPostPostId' })
+  upPostPost?: PostEntity;
 
-  @ManyToOne(() => PostUserUpEntity, up => up.notifications, { eager: true })
-  @JoinColumn([
-    { name: 'upPostUserId', referencedColumnName: 'userId' },
-    { name: 'upPostPostId', referencedColumnName: 'postId' },
-  ])
-  postUserUp?: PostUserUpEntity;
-
-
+  // markPost
   @Column({ type: 'varchar', length: 36, nullable: true })
   markPostUserId?: string;
+  @ManyToOne(() => UserEntity, { eager: true })
+  @JoinColumn({ name: 'markPostUserId' })
+  markPostUser?: UserEntity; 
+
   @Column({ type: 'varchar', length: 36, nullable: true })
   markPostPostId?: string;
-
-  @ManyToOne(() => PostUserMarkEntity, mark => mark.notifications, { eager: true })
-  @JoinColumn([
-    { name: 'markPostUserId', referencedColumnName: 'userId' },
-    { name: 'markPostPostId', referencedColumnName: 'postId' },
-  ])
-  postUserMark?: PostUserMarkEntity;
+  @ManyToOne(() => PostEntity, { eager: true })
+  @JoinColumn({ name: 'markPostPostId' })
+  markPostPost?: PostEntity;
   
 }

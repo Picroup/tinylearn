@@ -19,6 +19,4 @@ export class PostUserUpEntity extends MetaEntity {
   @ManyToOne(() => UserEntity, user => user.postUserUps)
   user?: UserEntity
 
-  @OneToMany(() => NotificationEntity, notification => notification.postUserUp)
-  notifications: NotificationEntity[];
 }
