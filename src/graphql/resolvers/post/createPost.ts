@@ -13,6 +13,7 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 import { tagNameToKeyword } from '../../../functional/tag/tagNameToKeyword';
 import { isUserInputTag } from '../../../functional/tag/isUserInputTag';
 import { UserSumEntity } from '../../../entity/UserSumEntity';
+import { TagSumEntity } from '../../../entity/TagSumEntity';
 
 @InputType()
 export class CreatePostInput {
@@ -140,13 +141,13 @@ async function createPostTagSums(
 }
 
 async function incrementTagsPostsCount(connection: Connection, tagNames: ExtractTagNamesResult) {
-  const tagRepository = connection.getRepository(TagEntity);
+  const tagSumRepository = connection.getRepository(TagSumEntity);
   const names = [
     ...tagNames.userInputTagNames,
     ...tagNames.autoDetectTagNames,
     ...tagNames.detectUserTagNames,
   ]
-  await tagRepository.increment({ name: In(names) }, 'postsCount', 1);
+  await tagSumRepository.increment({ name: In(names) }, 'postsCount', 1);
 }
 
 function filterTagWithContent(content: string): (tag: TagEntity) => boolean {

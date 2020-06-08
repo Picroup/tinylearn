@@ -7,6 +7,7 @@ import { TagEntity, TagKind } from '../../../entity/TagEntity';
 import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { UserSumEntity } from '../../../entity/UserSumEntity';
+import { TagSumEntity } from '../../../entity/TagSumEntity';
 
 @InputType() 
 export class FollowUserInput {
@@ -24,6 +25,7 @@ export async function followUser(
   const userRepository = connection.getRepository(UserEntity);
   const userSumRepository = connection.getRepository(UserSumEntity);
   const tagRepository = connection.getRepository(TagEntity);
+  const tagSumRepository = connection.getRepository(TagSumEntity);
   const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
   const userId = getPayloadUserId(tokenPayload);
 
@@ -41,7 +43,7 @@ export async function followUser(
   if (hasEffect) {
     await userSumRepository.increment({ id: userId }, 'followsCount', 1);
     await userSumRepository.increment({ id: targetUserId }, 'followersCount', 1);
-    await tagRepository.increment({ name: tagName }, 'followersCount', 1);
+    await tagSumRepository.increment({ name: tagName }, 'followersCount', 1);
   }
   return 'success';
 }

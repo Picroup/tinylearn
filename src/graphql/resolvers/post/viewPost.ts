@@ -1,9 +1,9 @@
 import { PostSumEntity } from './../../../entity/PostSumEntity';
-import { TagEntity } from './../../../entity/TagEntity';
 import { PostTagSumEntity } from './../../../entity/PostTagSumEntity';
 import { InputType, Field } from "type-graphql";
 import { AppContext } from "../../../app/context";
 import { Connection, In } from "typeorm";
+import { TagSumEntity } from '../../../entity/TagSumEntity';
 
 
 @InputType()
@@ -26,10 +26,10 @@ export async function viewPost(
 
 async function incrementTagsPostsViewsCount(connection: Connection, postId: string) {
   const postTagSumRepository = connection.getRepository(PostTagSumEntity); 
-  const tagRepository = connection.getRepository(TagEntity); 
+  const tagSumRepository = connection.getRepository(TagSumEntity); 
 
   const links = await postTagSumRepository.find({ postId });
   const tagNames = links.map(link => link.tagName);
 
-  await tagRepository.increment({ name: In(tagNames) }, 'postsViewsCount', 1);
+  await tagSumRepository.increment({ name: In(tagNames) }, 'postsViewsCount', 1);
 }

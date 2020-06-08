@@ -1,3 +1,4 @@
+import { TagSumEntity } from './TagSumEntity';
 import { Entity, PrimaryColumn, OneToMany, Column, OneToOne } from "typeorm";
 import { PostTagSumEntity } from "./PostTagSumEntity";
 import { MetaEntity } from "../functional/entity/MetaEntity";
@@ -30,18 +31,9 @@ export class TagEntity extends MetaEntity {
   @Column({ default: false })
   isAutoDetect: boolean;
 
-  // 分析
-
-  @Column({ type: 'int', default: 0, unsigned: true })
-  postsCount: number = 0;
-
-  @Column({ type: 'int', default: 0, unsigned: true })
-  postsViewsCount: number = 0;
-
-  @Column({ type: 'int', default: 0, unsigned: true })
-  followersCount: number = 0;
-
   // relationship
+  @OneToOne(() => TagSumEntity, sum => sum.tag)
+  sum?: TagSumEntity;
 
   @OneToOne(() => UserEntity, user => user.tag, {
     eager: true
