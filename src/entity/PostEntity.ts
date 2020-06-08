@@ -1,5 +1,6 @@
+import { PostSumEntity } from './PostSumEntity';
 import { PostUserUpEntity } from './PostUserUpEntity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import { UserEntity } from "./UserEntity";
 import { MetaEntity } from "../functional/entity/MetaEntity";
 import { PostTagSumEntity } from "./PostTagSumEntity";
@@ -14,18 +15,9 @@ export class PostEntity extends MetaEntity {
   @Column({ type: 'text' })
   content: string;
 
-  // 分析
-
-  @Column({ type: 'int', default: 0, unsigned: true })
-  viewsCount: number = 0;
-
-  @Column({ type: 'int', default: 0, unsigned: true })
-  marksCount: number = 0;
-
-  @Column({ type: 'int', default: 0, unsigned: true })
-  upsCount: number = 0;
-
   // 关系
+  @OneToOne(() => PostSumEntity, sum => sum.post)
+  sum?: PostSumEntity;
 
   @Column({ type: 'varchar', length: 36 })
   userId: string;

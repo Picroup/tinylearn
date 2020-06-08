@@ -1,3 +1,4 @@
+import { UserSumEntity } from './UserSumEntity';
 import { TagEntity } from './TagEntity';
 import { PostUserMarkEntity } from './PostUserMarkEntity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, OneToOne, JoinColumn } from "typeorm"
@@ -24,32 +25,10 @@ export class UserEntity extends MetaEntity {
   @Column()
   imageURL: string;
 
-  // 分析
-
-  @Column({ type: 'int', default: 0, unsigned: true })
-  postsCount: number = 0;
-
-  @Column({ type: 'int', default: 0, unsigned: true })
-  viewsCount: number = 0;
-
-  @Column({ type: 'int', default: 0, unsigned: true })
-  followsCount: number = 0;
-
-  @Column({ type: 'int', default: 0, unsigned: true })
-  followersCount: number = 0;
-
-  @Column({ type: 'int', default: 0, unsigned: true })
-  marksCount: number = 0;
-
-  @Column({ type: 'int', default: 0, unsigned: true })
-  upsCount: number = 0;
-
-  @Column({ type: 'int', default: 0, unsigned: true })
-  upedCount: number = 0;
-
-
-
   // 关系
+  @OneToOne(() => UserSumEntity, sum => sum.user)
+  sum?: UserSumEntity;  
+
   @OneToMany(() => PostEntity, post => post.user)
   posts: PostEntity[];
 

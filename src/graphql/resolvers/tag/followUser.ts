@@ -6,6 +6,8 @@ import { UserEntity } from '../../../entity/UserEntity';
 import { TagEntity, TagKind } from '../../../entity/TagEntity';
 import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
+import { UserSumEntity } from '../../../entity/UserSumEntity';
+import { TagSumEntity } from '../../../entity/TagSumEntity';
 
 @InputType() 
 export class FollowUserInput {
@@ -21,25 +23,24 @@ export async function followUser(
 
   const connection = container.resolve(Connection);
   const userRepository = connection.getRepository(UserEntity);
-  const tagRepository = connection.getRepository(TagEntity);
-  const userTagFollowRepository = connection.getRepository(UserTagFollowEntity);
+  const userSumRepository = connection.getRepository(UserSumEntity);
+  const tagSumRepository = connection.getRepository(TagSumEntity);
   const userId = getPayloadUserId(tokenPayload);
 
   const { username, tagName } = await userRepository.findOneOrFail(targetUserId);
   if (tagName == null) throw new Error(`User ${username} tagName is null`);
 
   const hasEffect = await _followTag({
-    tagRepository,
-    userTagFollowRepository,
+    connection,
     userId,
     tagName,
     tagKind: TagKind.user,
   });
   
   if (hasEffect) {
-    await userRepository.increment({ id: userId }, 'followsCount', 1);
-    await userRepository.increment({ id: targetUserId }, 'followersCount', 1);
-    await tagRepository.increment({ name: tagName }, 'followersCount', 1);
+    await userSumRepository.increment({ id: userId }, 'followsCount', 1);
+    await userSumRepository.increment({ id: targetUserId }, 'followersCount', 1);
+    await tagSumRepository.increment({ name: tagName }, 'followersCount', 1);
   }
   return 'success';
 }

@@ -1,3 +1,4 @@
+import { PostSumEntity } from './../../../entity/PostSumEntity';
 import { PostTagSumEntity, PostTagSumKind } from './../../../entity/PostTagSumEntity';
 import { UserEntity } from './../../../entity/UserEntity';
 import { TagEntity } from './../../../entity/TagEntity';
@@ -12,6 +13,8 @@ import { insertTag } from '../../../functional/db/tag';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { tagNameToKeyword } from '../../../functional/tag/tagNameToKeyword';
 import { isUserInputTag } from '../../../functional/tag/isUserInputTag';
+import { UserSumEntity } from '../../../entity/UserSumEntity';
+import { TagSumEntity } from '../../../entity/TagSumEntity';
 
 @InputType()
 export class CreatePostInput {
@@ -27,7 +30,8 @@ export async function createPost(
 ): Promise<string> {
   const connection = container.resolve(Connection);
   const postRepository = connection.getRepository(PostEntity);
-  const userRepository = connection.getRepository(UserEntity);
+  const postSumRepository = connection.getRepository(PostSumEntity);
+  const userSumRepository = connection.getRepository(UserSumEntity);
   const userId = getPayloadUserId(tokenPayload);
 
   const tagNames = await (async () => {
@@ -39,11 +43,13 @@ export async function createPost(
     return distinctTagNames(_tagNames);
   })()
 
-  const post = await postRepository.save({ content, userId });
-  await userRepository.increment({ id: userId }, 'postsCount', 1);
-  await createPostTagSums(connection, tagNames, post.id);
+  const result = await postRepository.insert({ content, userId });
+  const postId = result.identifiers[0]['id'] as string;
+  await postSumRepository.insert({ id: postId });
+  await userSumRepository.increment({ id: userId }, 'postsCount', 1);
+  await createPostTagSums(connection, tagNames, postId);
   await incrementTagsPostsCount(connection, tagNames);
-  return post.id;
+  return postId;
 }
 
 type ExtractTagNamesResult = {
@@ -75,7 +81,7 @@ async function extractTagNames(
         .where('find_in_set(:keyword, tag.keywords) <> 0', { keyword: tagNameToKeyword(tagName) })
         .getOne();
       if (tag == null) {
-        await insertTag(tagRepositry, { name: tagName });
+        await insertTag(connection, { name: tagName });
         result.push(tagName);
       } else {
         result.push(tag.name);
@@ -139,13 +145,13 @@ async function createPostTagSums(
 }
 
 async function incrementTagsPostsCount(connection: Connection, tagNames: ExtractTagNamesResult) {
-  const tagRepository = connection.getRepository(TagEntity);
+  const tagSumRepository = connection.getRepository(TagSumEntity);
   const names = [
     ...tagNames.userInputTagNames,
     ...tagNames.autoDetectTagNames,
     ...tagNames.detectUserTagNames,
   ]
-  await tagRepository.increment({ name: In(names) }, 'postsCount', 1);
+  await tagSumRepository.increment({ name: In(names) }, 'postsCount', 1);
 }
 
 function filterTagWithContent(content: string): (tag: TagEntity) => boolean {
