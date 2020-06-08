@@ -9,13 +9,13 @@ export abstract class MetaEntity {
     default: () => 'CURRENT_TIMESTAMP(3)',
     readonly: true,
   })
-  created: Date;
+  readonly created: Date;
 
   @UpdateDateColumn({
     type: 'datetime',
     precision: 3,
     default: () => 'CURRENT_TIMESTAMP(3)',
   })
-  updated: Date;
+  readonly updated: Date;
 
 }
