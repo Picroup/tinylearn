@@ -1,3 +1,4 @@
+import { PostUserUpEntity } from './PostUserUpEntity';
 import { UserTagFollowEntity } from './UserTagFollowEntity';
 import { UserEntity } from './UserEntity';
 import { MetaEntity } from "../functional/entity/MetaEntity";
@@ -46,5 +47,17 @@ export class NotificationEntity extends MetaEntity {
   ])
   userTagFollow?: UserTagFollowEntity; 
 
+
+  @Column({ type: 'varchar', length: 36, nullable: true })
+  upPostUserId?: string;
+  @Column({ type: 'varchar', length: 36, nullable: true })
+  upPostPostId?: string;
+
+  @ManyToOne(() => PostUserUpEntity, up => up.notifications, { eager: true })
+  @JoinColumn([
+    { name: 'upPostUserId', referencedColumnName: 'userId' },
+    { name: 'upPostPostId', referencedColumnName: 'postId' },
+  ])
+  postUserUp?: PostUserUpEntity;
 
 }

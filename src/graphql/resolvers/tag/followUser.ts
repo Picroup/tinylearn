@@ -8,6 +8,7 @@ import { TagKind } from '../../../entity/TagEntity';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { UserSumEntity } from '../../../entity/UserSumEntity';
 import { TagSumEntity } from '../../../entity/TagSumEntity';
+import { followUserNotification } from '../../../functional/db/notification';
 
 @InputType() 
 export class FollowUserInput {
@@ -44,12 +45,11 @@ export async function followUser(
     await tagSumRepository.increment({ name: tagName }, 'followersCount', 1);
     const notification = await notificationRepository.findOne({ followUserUserId: userId, followUserTagName: tagName });
     if (notification == null) {
-      await notificationRepository.insert({ 
-        kind: NotificationKind.followUser, 
+      await notificationRepository.insert(followUserNotification({
         targetUserId,
-        followUserUserId: userId,
-        followUserTagName: tagName,
-      });
+        userId,
+        tagName,
+      }));
       // TODO: 增加用户未读通知数量，发推送通知
     }
   }
