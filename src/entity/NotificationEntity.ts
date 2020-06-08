@@ -41,13 +41,13 @@ export class NotificationEntity extends MetaEntity {
   followUserUserId?: string;
   @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'followUserUserId' })
-  followUserKindUser?: UserEntity;
+  followUserUser?: UserEntity;
 
   @Column({ nullable: true })
   followUserTagName: string;
   @ManyToOne(() => TagEntity, { eager: true })
   @JoinColumn({ name: 'followUserTagName' })
-  followUserKindTag?: TagEntity;
+  followUserTag?: TagEntity;
 
   // upPost
   @Column({ type: 'varchar', length: 36, nullable: true })
