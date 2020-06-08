@@ -5,6 +5,7 @@ import { AppContext } from '../../../app/context';
 import { InputType, Field } from "type-graphql";
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { UserSumEntity } from '../../../entity/UserSumEntity';
+import { PostSumEntity } from '../../../entity/PostSumEntity';
 
 @InputType()
 export class UpInput {
@@ -22,13 +23,14 @@ export async function up(
   const postUserUpRepository = connection.getRepository(PostUserUpEntity);
   const userSumRepository = connection.getRepository(UserSumEntity);
   const postRepository = connection.getRepository(PostEntity);
+  const postSumRepository = connection.getRepository(PostSumEntity);
   const userId = getPayloadUserId(tokenPayload);
 
   const link = await postUserUpRepository.findOne({ userId, postId });
   if (link == null) {
     await postUserUpRepository.insert({ userId, postId });
     const post = await postRepository.findOneOrFail(postId);
-    await postRepository.increment({ id: postId }, 'upsCount', 1);
+    await postSumRepository.increment({ id: postId }, 'upsCount', 1);
     await userSumRepository.increment({ id: userId }, 'upsCount', 1);
     await userSumRepository.increment({ id: post.userId }, 'upedCount', 1);
   }

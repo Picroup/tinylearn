@@ -1,4 +1,4 @@
-import { PostEntity } from '../../../entity/PostEntity';
+import { PostSumEntity } from './../../../entity/PostSumEntity';
 import { PostUserMarkEntity } from '../../../entity/PostUserMarkEntity';
 import { InputType, Field } from "type-graphql";
 import { AppContext } from "../../../app/context";
@@ -22,14 +22,14 @@ export async function mark(
   const connection = container.resolve(Connection);
   const postUserMarkRepository = connection.getRepository(PostUserMarkEntity);
   const userSumRepository = connection.getRepository(UserSumEntity);
-  const postEntity = connection.getRepository(PostEntity);
+  const postSumRepository = connection.getRepository(PostSumEntity);
   const userId = getPayloadUserId(tokenPayload);
 
   const link = await postUserMarkRepository.findOne({ userId, postId });
   if (link == null) {
     await postUserMarkRepository.insert({ userId, postId });
     await userSumRepository.increment({ id: userId }, 'marksCount', 1);
-    await postEntity.increment({ id: postId }, 'marksCount', 1);
+    await postSumRepository.increment({ id: postId }, 'marksCount', 1);
   }
   return 'success';
 }

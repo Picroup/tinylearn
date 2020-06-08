@@ -25,11 +25,6 @@ export class UserEntity extends MetaEntity {
   @Column()
   imageURL: string;
 
-  // 分析
-
-
-
-
   // 关系
   @OneToOne(() => UserSumEntity, sum => sum.user)
   sum?: UserSumEntity;  
