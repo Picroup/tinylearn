@@ -9,6 +9,7 @@ import { AppContext } from '../../../app/context';
 import { Resolver, Mutation, Arg, Ctx, UseMiddleware, Query } from "type-graphql";
 import { User } from '../../types/User';
 import { loginOrRegister, LoginOrRegisterInput } from './loginOrRegister';
+import { markAllNotificationsAsRead } from './markAllNotificationsReaded';
 
 @Resolver(User)
 export class UserResolver {
@@ -62,5 +63,13 @@ export class UserResolver {
     @Arg('input') input: ViewUserInput,
   ): Promise<string> {
     return viewUser(context, input);
+  }
+
+  @Mutation(() => String)
+  @UseMiddleware(authorization)
+  async markAllNotificationsAsRead(
+    @Ctx() context: AppContext,
+  ): Promise<string> {
+    return markAllNotificationsAsRead(context);
   }
 }
