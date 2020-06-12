@@ -1,4 +1,7 @@
-import { SearchSuggestionsInput, searchSuggestions } from './searchSuggestions';
+import { searchPost } from './searchPost';
+import { CursorPosts } from './../../types/Post';
+import { SearchInput } from './../../../functional/graphql/SearchInput';
+import { searchSuggestions } from './searchSuggestions';
 import { UserSumary } from '../../types/UserSumary';
 import { CursorInput } from '../../../functional/graphql/CursorInput';
 import { CursorNotifications } from '../../types/Nofification';
@@ -16,6 +19,7 @@ import { loginOrRegister, LoginOrRegisterInput } from './loginOrRegister';
 import { markAllNotificationsAsRead } from './markAllNotificationsReaded';
 import { notifications } from './notifications';
 import { userSum } from './userSum';
+import { CursorSearchInput } from '../../../functional/graphql/CursorSearchInput';
 
 @Resolver(User)
 export class UserResolver {
@@ -40,9 +44,17 @@ export class UserResolver {
   @Query(() => [String])
   async searchSuggestions(
     @Ctx() context: AppContext,
-    @Arg('input') input: SearchSuggestionsInput,
+    @Arg('input') input: SearchInput,
   ): Promise<string[]> {
     return searchSuggestions(context, input);
+  }
+
+  @Query(() => CursorPosts)
+  async searchPost(
+    @Ctx() context: AppContext,
+    @Arg('input') input: CursorSearchInput,
+  ): Promise<CursorPosts> {
+    return searchPost(context, input);
   }
 
   @Mutation(() => String)

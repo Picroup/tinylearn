@@ -1,26 +1,18 @@
+import { SearchInput } from './../../../functional/graphql/SearchInput';
 import { TagEntity } from './../../../entity/TagEntity';
 import { Connection } from 'typeorm';
-import { Field } from 'type-graphql';
 import { AppContext } from './../../../app/context';
-import { InputType } from 'type-graphql';
-
-@InputType()
-export class SearchSuggestionsInput {
-
-  @Field()
-  keyword: string;
-}
 
 export async function searchSuggestions(
   { container }: AppContext,
-  { keyword }: SearchSuggestionsInput,
+  { query }: SearchInput,
 ): Promise<string[]> {
 
   const connection = container.resolve(Connection);
   const tagRepository = connection.getRepository(TagEntity);
 
   const items = await tagRepository.createQueryBuilder()
-    .where('MATCH (name , keywords) AGAINST (:keyword WITH QUERY EXPANSION)', { keyword })
+    .where('MATCH (name , keywords) AGAINST (:query WITH QUERY EXPANSION)', { query })
     .take(10)
     .getMany();
 
