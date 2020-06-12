@@ -1,3 +1,5 @@
+import { CursorUsers } from './../../types/User';
+import { CursorTags } from './../../types/Tag';
 import { searchPost } from './searchPost';
 import { CursorPosts } from './../../types/Post';
 import { SearchInput } from './../../../functional/graphql/SearchInput';
@@ -20,6 +22,7 @@ import { markAllNotificationsAsRead } from './markAllNotificationsReaded';
 import { notifications } from './notifications';
 import { userSum } from './userSum';
 import { CursorSearchInput } from '../../../functional/graphql/CursorSearchInput';
+import { searchTag, searchUser } from './searchTag';
 
 @Resolver(User)
 export class UserResolver {
@@ -55,6 +58,22 @@ export class UserResolver {
     @Arg('input') input: CursorSearchInput,
   ): Promise<CursorPosts> {
     return searchPost(context, input);
+  }
+
+  @Query(() => CursorTags)
+  async searchTag(
+    @Ctx() context: AppContext,
+    @Arg('input') input: CursorSearchInput,
+  ): Promise<CursorTags> {
+    return searchTag(context, input);
+  }
+
+  @Query(() => CursorUsers)
+  async searchUser(
+    @Ctx() context: AppContext,
+    @Arg('input') input: CursorSearchInput,
+  ): Promise<CursorUsers> {
+    return searchUser(context, input);
   }
 
   @Mutation(() => String)

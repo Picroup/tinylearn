@@ -1,7 +1,6 @@
 import { TagSumEntity } from './../entity/TagSumEntity';
 import { PostSumEntity } from './../entity/PostSumEntity';
 import { UserSumEntity } from './../entity/UserSumEntity';
-import { UserSumary } from '../graphql/types/UserSumary';
 import { UserEntity } from './../entity/UserEntity';
 import { EntityDataLoader } from './../functional/dataloader/EntityDataLoader';
 import { DependencyContainer, container } from "tsyringe";

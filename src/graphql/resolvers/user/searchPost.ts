@@ -16,8 +16,8 @@ export async function searchPost(
 
   const skip = cursor != null ? decodeIntCursor(cursor) : 0;
 
-  const [items, count] = await postReository.createQueryBuilder()
-    .where('MATCH (content) AGAINST (:query IN BOOLEAN MODE)', { query })
+  const [items, count] = await postReository.createQueryBuilder('post')
+    .where('MATCH (post.content) AGAINST (:query IN BOOLEAN MODE)', { query })
     .skip(skip)
     .take(take)
     .getManyAndCount();

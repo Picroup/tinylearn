@@ -11,8 +11,8 @@ export async function searchSuggestions(
   const connection = container.resolve(Connection);
   const tagRepository = connection.getRepository(TagEntity);
 
-  const items = await tagRepository.createQueryBuilder()
-    .where('MATCH (name , keywords) AGAINST (:query WITH QUERY EXPANSION)', { query })
+  const items = await tagRepository.createQueryBuilder('tag')
+    .where('MATCH (tag.name, tag.keywords) AGAINST (:query WITH QUERY EXPANSION)', { query })
     .take(10)
     .getMany();
 
