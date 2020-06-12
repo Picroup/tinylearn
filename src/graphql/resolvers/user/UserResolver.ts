@@ -1,3 +1,4 @@
+import { SearchSuggestionsInput, searchSuggestions } from './searchSuggestions';
 import { UserSumary } from '../../types/UserSumary';
 import { CursorInput } from '../../../functional/graphql/CursorInput';
 import { CursorNotifications } from '../../types/Nofification';
@@ -34,6 +35,14 @@ export class UserResolver {
     @Arg('input') input: CursorInput,
   ): Promise<CursorNotifications> {
     return notifications(context, input);
+  }
+
+  @Query(() => [String])
+  async searchSuggestions(
+    @Ctx() context: AppContext,
+    @Arg('input') input: SearchSuggestionsInput,
+  ): Promise<string[]> {
+    return searchSuggestions(context, input);
   }
 
   @Mutation(() => String)

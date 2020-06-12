@@ -1,6 +1,6 @@
 import { PostSumEntity } from './PostSumEntity';
 import { PostUserUpEntity } from './PostUserUpEntity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne, Index } from "typeorm";
 import { UserEntity } from "./UserEntity";
 import { MetaEntity } from "../functional/entity/MetaEntity";
 import { PostTagSumEntity } from "./PostTagSumEntity";
@@ -12,6 +12,7 @@ export class PostEntity extends MetaEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Index({ fulltext: true, parser: 'NGRAM' })
   @Column({ type: 'text' })
   content: string;
 

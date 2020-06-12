@@ -1,5 +1,5 @@
 import { TagSumEntity } from './TagSumEntity';
-import { Entity, PrimaryColumn, OneToMany, Column, OneToOne } from "typeorm";
+import { Entity, PrimaryColumn, OneToMany, Column, OneToOne, Index } from "typeorm";
 import { PostTagSumEntity } from "./PostTagSumEntity";
 import { MetaEntity } from "../functional/entity/MetaEntity";
 import { UserTagFollowEntity } from "./UserTagFollowEntity";
@@ -11,6 +11,7 @@ export enum TagKind {
 }
 
 @Entity()
+@Index(['name', 'keywords'], { fulltext: true, parser: 'NGRAM' })
 export class TagEntity extends MetaEntity {
 
   @PrimaryColumn()

@@ -2,7 +2,7 @@ import { NotificationEntity } from './NotificationEntity';
 import { UserSumEntity } from './UserSumEntity';
 import { TagEntity } from './TagEntity';
 import { PostUserMarkEntity } from './PostUserMarkEntity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, OneToOne, JoinColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, OneToOne, JoinColumn, Index } from "typeorm"
 import { PostEntity } from "./PostEntity";
 import { MetaEntity } from "../functional/entity/MetaEntity";
 import { UserTagFollowEntity } from "./UserTagFollowEntity";
@@ -14,7 +14,8 @@ export class UserEntity extends MetaEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
+  @Column()
+  @Index({ unique: true })
   username: string;
 
   @Column({ default: false })
