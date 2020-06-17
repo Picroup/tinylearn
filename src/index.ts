@@ -1,6 +1,20 @@
 import "reflect-metadata"
 import { buildSchema, ObjectType, Field, ID, Resolver, Query } from "type-graphql";
 import { ApolloServer } from "apollo-server";
+import { CreateDateColumn, Entity, PrimaryGeneratedColumn, Column, createConnection } from 'typeorm';
+
+@Entity()
+class PostEntity {
+
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @CreateDateColumn()
+  created: Date;
+
+  @Column('text')
+  content: string;
+}
 
 @ObjectType()
 class Post {
@@ -44,21 +58,50 @@ async function main() {
 
   try {
 
-    const schema = await buildSchema({
-      resolvers: [PostResolver],
-      dateScalarMode: 'timestamp'
+    // const schema = await buildSchema({
+    //   resolvers: [PostResolver],
+    //   dateScalarMode: 'timestamp'
+    // });
+
+
+    // const server = new ApolloServer({
+    //   schema,
+    //   playground: true
+    // });
+
+    // const { url } = await server.listen(4444);
+
+    // console.log(`GraphQL Playground available at ${url}`);
+
+    const connection = await createConnection({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'tinylearn',
+      password: 'my_password',
+      database: 'tinylearn',
+      synchronize: true,
+      entities: [PostEntity],
     });
 
+    console.log('Create connection success!');
 
-    const server = new ApolloServer({
-      schema,
-      playground: true
-    });
+    const postRepository = connection.getRepository(PostEntity);
 
-    const { url } = await server.listen(4444);
+    // 新增
+    // const result = await postRepository.insert({ content: '提供基于GraphQL API的数据查询及访问,「Hasura」获990万美元A轮...' });
+    // console.log(`insert post success: ${JSON.stringify(result, null, 2)}`);
 
-    console.log(`GraphQL Playground available at ${url}`);
+    // 修改
+    // const result = await postRepository
+    //   .update('fefc7d7c-4d33-45e2-b437-88db8e920f5d', { content: 'Hello GraphQL' });
+    // console.log(`update post success: ${JSON.stringify(result, null, 2)}`);
 
+    // 删除
+    const result = await postRepository
+      .delete('fefc7d7c-4d33-45e2-b437-88db8e920f5d');
+    console.log(`delete post success: ${JSON.stringify(result, null, 2)}`);
+    
   } catch (error) {
     console.error(error);
   }

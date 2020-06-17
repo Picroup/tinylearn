@@ -21,8 +21,10 @@
     "apollo-server": "^2.13.1",
     "class-validator": "^0.12.2",
     "graphql": "^14.6.0",
+    "mysql": "^2.18.1",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^0.17.6"
+    "type-graphql": "^0.17.6",
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "@types/graphql": "^14.0.7",
