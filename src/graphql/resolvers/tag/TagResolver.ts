@@ -6,7 +6,7 @@ import { CursorPosts } from '../../types/Post';
 import { AppContext } from '../../../app/context';
 import { Tag, CursorTags } from '../../types/Tag';
 import { Resolver, Query, Ctx, FieldResolver, Arg, Root, UseMiddleware, Mutation } from "type-graphql";
-import { tagPosts } from './tagPosts';
+import { tagPosts, TagPostsInput } from './tagPosts';
 import { CursorInput } from '../../../functional/graphql/CursorInput';
 import { followingTags } from './followingTags';
 import { TagInput, tag } from './tag';
@@ -22,7 +22,7 @@ export class TagResolver {
   async posts(
     @Ctx() context: AppContext,
     @Root() tag: Tag,
-    @Arg('input') input: CursorInput,
+    @Arg('input') input: TagPostsInput,
   ): Promise<CursorPosts> {
     return tagPosts(context, tag, input)
   }
