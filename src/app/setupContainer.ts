@@ -1,3 +1,7 @@
+import { TagEntity } from './../entity/TagEntity';
+import { UserTagFollowEntity } from './../entity/UserTagFollowEntity';
+import { PostEntity } from './../entity/PostEntity';
+import { PostTagSumEntity } from './../entity/PostTagSumEntity';
 import { TagSumEntity } from './../entity/TagSumEntity';
 import { PostSumEntity } from './../entity/PostSumEntity';
 import { UserSumEntity } from './../entity/UserSumEntity';
@@ -21,12 +25,20 @@ function createAliClient(): AliClient {
 export async function setupContainer(): Promise<DependencyContainer> {
   const connection = await createConnection();
   const aliClient = createAliClient();
+
   container.register(Connection, { useValue: connection})
     .register('EntityDataLoader<string, UserEntity>', lazyCachingFactory(container => {
       const connection = container.resolve(Connection);
       return new EntityDataLoader<string, UserEntity>(
         connection.getRepository(UserEntity), 
         entity => entity.id
+      );
+    }))
+    .register('EntityDataLoader<string, TagEntity>', lazyCachingFactory(container => {
+      const connection = container.resolve(Connection);
+      return new EntityDataLoader<string, TagEntity>(
+        connection.getRepository(TagEntity),
+        entity => entity.name
       );
     }))
     .register('EntityDataLoader<string, UserSumEntity>', lazyCachingFactory(container => {

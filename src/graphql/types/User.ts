@@ -18,6 +18,9 @@ export class User {
 
   @Field()
   imageURL: string;
+
+  @Field({ nullable: true })
+  tagName?: string;
 }
 
 @ObjectType()
