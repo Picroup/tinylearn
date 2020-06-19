@@ -2,7 +2,7 @@ import { UserEntity } from './../../../entity/UserEntity';
 import { Connection } from 'typeorm';
 import { User } from './../../types/User';
 import { AppContext } from './../../../app/context';
-import { IDInput } from '../../../functional/graphql/IDInput';
+import { IDInput } from '../../../functional/graphql/types/IDInput';
 
 export async function user(
   { container }: AppContext,

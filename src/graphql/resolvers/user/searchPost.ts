@@ -3,7 +3,7 @@ import { CursorPosts } from './../../types/Post';
 import { AppContext } from './../../../app/context';
 import { Connection } from 'typeorm';
 import { decodeIntCursor, encodeIntCursor } from '../../../functional/cursor/decodeIntCursor';
-import { CursorSearchInput } from '../../../functional/graphql/CursorSearchInput';
+import { CursorSearchInput } from '../../../functional/graphql/types/CursorSearchInput';
 
 
 export async function searchPost(

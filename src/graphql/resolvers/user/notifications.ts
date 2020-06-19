@@ -1,6 +1,6 @@
 import { NotificationEntity } from './../../../entity/NotificationEntity';
 import { CursorNotifications } from './../../types/Nofification';
-import { CursorInput } from './../../../functional/graphql/CursorInput';
+import { CursorInput } from '../../../functional/graphql/types/CursorInput';
 import { AppContext } from './../../../app/context';
 import { Connection } from 'typeorm';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';

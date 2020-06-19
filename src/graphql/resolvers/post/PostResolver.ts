@@ -2,7 +2,6 @@ import { PostSumary } from './../../types/PostSumary';
 import { ViewPostInput, viewPost } from './viewPost';
 import { User } from './../../types/User';
 import { Tag } from './../../types/Tag';
-import { CursorInput } from './../../../functional/graphql/CursorInput';
 import { CursorPosts } from './../../types/Post';
 import { authorization } from '../../middlewares/Authorization';
 import { AppContext } from '../../../app/context';
@@ -18,6 +17,7 @@ import { UpInput, up } from './up';
 import { MarkInput, mark } from './mark';
 import { UnmarkInput, unmark } from './unmark';
 import { postSumary } from './postSumary';
+import { CursorInput } from '../../../functional/graphql/types/CursorInput';
 
 @Resolver(Post)
 export class PostResolver {

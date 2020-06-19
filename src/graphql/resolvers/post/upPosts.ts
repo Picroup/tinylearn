@@ -1,6 +1,6 @@
 import { PostUserUpEntity } from './../../../entity/PostUserUpEntity';
 import { AppContext } from "../../../app/context";
-import { CursorInput } from "../../../functional/graphql/CursorInput";
+import { CursorInput } from "../../../functional/graphql/types/CursorInput";
 import { CursorPosts } from "../../types/Post";
 import { Connection } from "typeorm";
 import { getPayloadUserId } from '../../../functional/token/tokenservice';

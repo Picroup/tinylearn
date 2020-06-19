@@ -5,7 +5,7 @@ import { CursorPosts } from '../../types/Post';
 import { Connection } from 'typeorm';
 import { PostTagSumEntity } from '../../../entity/PostTagSumEntity';
 import { sqlDateTime } from '../../../functional/typeorm/MoreThanDate';
-import { CursorInput } from '../../../functional/graphql/CursorInput';
+import { CursorInput } from '../../../functional/graphql/types/CursorInput';
 import { decodeDateCursor, encodeDateCursor } from '../../../functional/cursor/decodeDateCursor';
 import { ALL_TAGNAME } from '../../../app/constants';
 import { InputType, Field } from 'type-graphql';

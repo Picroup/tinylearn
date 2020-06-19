@@ -2,7 +2,7 @@ import { CursorFollows } from './../../types/UserTagFollow';
 import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
 import { BuilderChain } from '../../../functional/builderchain/BuilderChain';
 import { Connection } from 'typeorm';
-import { CursorInput } from '../../../functional/graphql/CursorInput';
+import { CursorInput } from '../../../functional/graphql/types/CursorInput';
 import { User } from '../../types/User';
 import { AppContext } from '../../../app/context';
 import { decodeDateCursor, encodeDateCursor } from '../../../functional/cursor/decodeDateCursor';

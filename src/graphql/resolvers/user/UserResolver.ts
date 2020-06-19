@@ -1,13 +1,13 @@
 import { CursorFollows } from './../../types/UserTagFollow';
-import { IDInput } from './../../../functional/graphql/IDInput';
+import { IDInput } from '../../../functional/graphql/types/IDInput';
 import { CursorUsers } from './../../types/User';
 import { CursorTags } from './../../types/Tag';
 import { searchPost } from './searchPost';
 import { CursorPosts } from './../../types/Post';
-import { SearchInput } from './../../../functional/graphql/SearchInput';
+import { SearchInput } from '../../../functional/graphql/types/SearchInput';
 import { searchSuggestions } from './searchSuggestions';
 import { UserSumary } from '../../types/UserSumary';
-import { CursorInput } from '../../../functional/graphql/CursorInput';
+import { CursorInput } from '../../../functional/graphql/types/CursorInput';
 import { CursorNotifications } from '../../types/Nofification';
 import { ViewUserInput, viewUser } from './viewUser';
 import { SetMyImageURLInput, setMyImageURL } from './setMyImageURL';
@@ -23,11 +23,12 @@ import { loginOrRegister, LoginOrRegisterInput } from './loginOrRegister';
 import { markAllNotificationsAsRead } from './markAllNotificationsReaded';
 import { notifications } from './notifications';
 import { userSum } from './userSum';
-import { CursorSearchInput } from '../../../functional/graphql/CursorSearchInput';
+import { CursorSearchInput } from '../../../functional/graphql/types/CursorSearchInput';
 import { searchTag, searchUser } from './searchTag';
 import { user } from './user';
 import { userFollowingTags } from './userFollowingTags';
 import { userFollowers } from './userFollowers';
+import { userPosts } from './userPosts';
 
 @Resolver(User)
 export class UserResolver {
@@ -38,6 +39,15 @@ export class UserResolver {
     @Root() user: User,
   ): Promise<UserSumary> {
     return userSum(context, user);
+  }
+
+  @FieldResolver(() => CursorPosts)
+  async posts(
+    @Ctx() context: AppContext,
+    @Root() user: User,
+    @Arg('input') input: CursorInput
+  ): Promise<CursorPosts> {
+    return userPosts(context, user, input);
   }
 
   @FieldResolver(() => CursorFollows)

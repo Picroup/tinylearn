@@ -1,6 +1,6 @@
 import { User } from './User';
 import { ObjectType, Field, ID } from "type-graphql";
-import CursorItems from "../../functional/graphql/CursorItems";
+import CursorItems from "../../functional/graphql/types/CursorItems";
 
 
 @ObjectType()

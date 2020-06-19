@@ -2,7 +2,7 @@ import { CursorUsers } from './../../types/User';
 import { TagEntity } from './../../../entity/TagEntity';
 import { Connection } from 'typeorm';
 import { CursorTags } from './../../types/Tag';
-import { CursorSearchInput } from './../../../functional/graphql/CursorSearchInput';
+import { CursorSearchInput } from '../../../functional/graphql/types/CursorSearchInput';
 import { AppContext } from './../../../app/context';
 import { decodeIntCursor, encodeIntCursor } from '../../../functional/cursor/decodeIntCursor';
 
