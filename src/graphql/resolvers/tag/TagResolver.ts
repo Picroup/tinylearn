@@ -8,7 +8,6 @@ import { Tag, CursorTags } from '../../types/Tag';
 import { Resolver, Query, Ctx, FieldResolver, Arg, Root, UseMiddleware, Mutation } from "type-graphql";
 import { tagPosts, TagPostsInput } from './tagPosts';
 import { CursorInput } from '../../../functional/graphql/CursorInput';
-import { followingTags } from './followingTags';
 import { TagInput, tag } from './tag';
 import { UnfollowUserInput, unfollowUser } from './unfollowUser';
 import { FollowTagInput, followTag } from './followTag';
@@ -49,15 +48,6 @@ export class TagResolver {
     @Arg('input') input: CursorInput,
   ): Promise<CursorTags> {
     return tags(context, input);
-  }
-
-  @Query(() => CursorTags)
-  @UseMiddleware(authorization)
-  async followingTags(
-    @Ctx() context: AppContext,
-    @Arg('input') input: CursorInput,
-  ): Promise<CursorTags> {
-    return followingTags(context, input);
   }
 
   @Mutation(() => String)
