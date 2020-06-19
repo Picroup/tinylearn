@@ -1,3 +1,4 @@
+import { IDInput } from './../../../functional/graphql/IDInput';
 import { CursorUsers } from './../../types/User';
 import { CursorTags } from './../../types/Tag';
 import { searchPost } from './searchPost';
@@ -23,6 +24,7 @@ import { notifications } from './notifications';
 import { userSum } from './userSum';
 import { CursorSearchInput } from '../../../functional/graphql/CursorSearchInput';
 import { searchTag, searchUser } from './searchTag';
+import { user } from './user';
 
 @Resolver(User)
 export class UserResolver {
@@ -33,6 +35,14 @@ export class UserResolver {
     @Root() user: User,
   ): Promise<UserSumary> {
     return userSum(context, user);
+  }
+
+  @Query(() => User, { nullable: true })
+  async user(
+    @Ctx() context: AppContext,
+    @Arg('input') input: IDInput,
+  ): Promise<User | undefined> {
+    return user(context, input);
   }
 
   @Query(() => CursorNotifications)
