@@ -28,6 +28,7 @@ import { searchTag, searchUser } from './searchTag';
 import { user } from './user';
 import { userFollowingTags } from './userFollowingTags';
 import { userFollowers } from './userFollowers';
+import { userPosts } from './userPosts';
 
 @Resolver(User)
 export class UserResolver {
@@ -38,6 +39,15 @@ export class UserResolver {
     @Root() user: User,
   ): Promise<UserSumary> {
     return userSum(context, user);
+  }
+
+  @FieldResolver(() => CursorPosts)
+  async posts(
+    @Ctx() context: AppContext,
+    @Root() user: User,
+    @Arg('input') input: CursorInput
+  ): Promise<CursorPosts> {
+    return userPosts(context, user, input);
   }
 
   @FieldResolver(() => CursorFollows)
