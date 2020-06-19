@@ -1,3 +1,4 @@
+import { CursorFollows } from './../../types/UserTagFollow';
 import { IDInput } from './../../../functional/graphql/IDInput';
 import { CursorUsers } from './../../types/User';
 import { CursorTags } from './../../types/Tag';
@@ -25,6 +26,8 @@ import { userSum } from './userSum';
 import { CursorSearchInput } from '../../../functional/graphql/CursorSearchInput';
 import { searchTag, searchUser } from './searchTag';
 import { user } from './user';
+import { userFollowingTags } from './userFollowingTags';
+import { userFollowers } from './userFollowers';
 
 @Resolver(User)
 export class UserResolver {
@@ -35,6 +38,24 @@ export class UserResolver {
     @Root() user: User,
   ): Promise<UserSumary> {
     return userSum(context, user);
+  }
+
+  @FieldResolver(() => CursorFollows)
+  async followingTags(
+    @Ctx() context: AppContext,
+    @Root() user: User,
+    @Arg('input') input: CursorInput
+  ): Promise<CursorFollows> {
+    return userFollowingTags(context, user, input);
+  }
+
+  @FieldResolver(() => CursorFollows)
+  async followers(
+    @Ctx() context: AppContext,
+    @Root() user: User,
+    @Arg('input') input: CursorInput
+  ): Promise<CursorFollows> {
+    return userFollowers(context, user, input);
   }
 
   @Query(() => User, { nullable: true })
