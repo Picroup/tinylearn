@@ -1,4 +1,5 @@
 
+
 export async function cursorItems<CursorData, Item>(
   { take, cursor, getData, decodeCursor, encodeCursor }:
     { take: number; cursor: string | undefined; getData: (take: number, cursorData: CursorData | null) => Promise<[Item[], number]>; decodeCursor: (cursor: string) => CursorData; encodeCursor: (item: Item) => string; },
