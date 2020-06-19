@@ -2,7 +2,7 @@ import { PostTagSumEntity } from './../../../entity/PostTagSumEntity';
 import { LessThanDate } from './../../../functional/typeorm/MoreThanDate';
 import { UserTagFollowEntity } from './../../../entity/UserTagFollowEntity';
 import { CursorPosts } from './../../types/Post';
-import { CursorInput } from './../../../functional/graphql/CursorInput';
+import { CursorInput } from '../../../functional/graphql/types/CursorInput';
 import { AppContext } from './../../../app/context';
 import { decodeDateCursor, encodeDateCursor } from '../../../functional/cursor/decodeDateCursor';
 import { Connection, In } from 'typeorm';

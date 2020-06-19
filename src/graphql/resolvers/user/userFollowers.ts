@@ -2,13 +2,13 @@ import { UserTagFollowEntity } from './../../../entity/UserTagFollowEntity';
 import { BuilderChain } from './../../../functional/builderchain/BuilderChain';
 import { UserEntity } from './../../../entity/UserEntity';
 import { Connection } from 'typeorm';
-import { CursorInput } from './../../../functional/graphql/CursorInput';
+import { CursorInput } from '../../../functional/graphql/types/CursorInput';
 import { AppContext } from './../../../app/context';
 import { CursorFollows } from './../../types/UserTagFollow';
 import { User } from '../../types/User';
 import { decodeDateCursor, encodeDateCursor } from '../../../functional/cursor/decodeDateCursor';
 import { sqlDateTime } from '../../../functional/typeorm/MoreThanDate';
-import { cursorItems } from '../../../functional/cursorItems';
+import { cursorItems } from '../../../functional/graphql/cursorItems';
 
 export async function userFollowers(
   { container }: AppContext,

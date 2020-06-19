@@ -1,4 +1,4 @@
-import { SearchInput } from './../../../functional/graphql/SearchInput';
+import { SearchInput } from '../../../functional/graphql/types/SearchInput';
 import { TagEntity } from './../../../entity/TagEntity';
 import { Connection } from 'typeorm';
 import { AppContext } from './../../../app/context';

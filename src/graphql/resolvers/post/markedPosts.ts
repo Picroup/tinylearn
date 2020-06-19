@@ -1,11 +1,11 @@
 import { LessThanDate } from './../../../functional/typeorm/MoreThanDate';
 import { PostUserMarkEntity } from './../../../entity/PostUserMarkEntity';
 import { CursorPosts } from './../../types/Post';
-import { CursorInput } from './../../../functional/graphql/CursorInput';
 import { AppContext } from './../../../app/context';
 import { Connection } from 'typeorm';
 import { getPayloadUserId } from '../../../functional/token/tokenservice';
 import { decodeDateCursor, encodeDateCursor } from '../../../functional/cursor/decodeDateCursor';
+import { CursorInput } from '../../../functional/graphql/types/CursorInput';
 
 
 export async function markedPosts(

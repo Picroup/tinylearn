@@ -1,4 +1,4 @@
-import { CursorInput } from './../../../functional/graphql/CursorInput';
+import { CursorInput } from '../../../functional/graphql/types/CursorInput';
 import { CursorTags } from './../../types/Tag';
 import { AppContext } from './../../../app/context';
 import { Connection, FindConditions } from 'typeorm';

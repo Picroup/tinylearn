@@ -7,7 +7,7 @@ import { AppContext } from '../../../app/context';
 import { Tag, CursorTags } from '../../types/Tag';
 import { Resolver, Query, Ctx, FieldResolver, Arg, Root, UseMiddleware, Mutation } from "type-graphql";
 import { tagPosts, TagPostsInput } from './tagPosts';
-import { CursorInput } from '../../../functional/graphql/CursorInput';
+import { CursorInput } from '../../../functional/graphql/types/CursorInput';
 import { TagInput, tag } from './tag';
 import { UnfollowUserInput, unfollowUser } from './unfollowUser';
 import { FollowTagInput, followTag } from './followTag';
