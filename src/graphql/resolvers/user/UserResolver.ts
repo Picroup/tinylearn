@@ -1,3 +1,4 @@
+import { CursorFollows } from './../../types/UserTagFollow';
 import { IDInput } from './../../../functional/graphql/IDInput';
 import { CursorUsers } from './../../types/User';
 import { CursorTags } from './../../types/Tag';
@@ -38,12 +39,12 @@ export class UserResolver {
     return userSum(context, user);
   }
 
-  @FieldResolver(() => CursorTags)
+  @FieldResolver(() => CursorFollows)
   async followingTags(
     @Ctx() context: AppContext,
     @Root() user: User,
     @Arg('input') input: CursorInput
-  ): Promise<CursorTags> {
+  ): Promise<CursorFollows> {
     return userFollowingTags(context, user, input);
   }
 

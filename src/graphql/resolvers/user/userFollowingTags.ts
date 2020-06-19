@@ -1,3 +1,4 @@
+import { CursorFollows } from './../../types/UserTagFollow';
 import { UserTagFollowEntity } from '../../../entity/UserTagFollowEntity';
 import { BuilderChain } from '../../../functional/builderchain/BuilderChain';
 import { Connection } from 'typeorm';
@@ -12,7 +13,7 @@ export async function userFollowingTags(
   { container }: AppContext,
   user: User,
   { cursor, take }: CursorInput,
-): Promise<CursorTags> {
+): Promise<CursorFollows> {
 
   const connection = container.resolve(Connection);
   const userId = user.id;
@@ -31,11 +32,7 @@ export async function userFollowingTags(
     .take(take)
   );
 
-  const [links, count] = await chain.builder.getManyAndCount();
-
-  const items = links
-    .filter(link => link.tag != null)
-    .map(link => link.tag!);
+  const [items, count] = await chain.builder.getManyAndCount();
 
   const newCursor = (() => {
     if (take >= count) return null;
