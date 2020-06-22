@@ -1,7 +1,8 @@
 import "reflect-metadata"
-import { buildSchema, ObjectType, Field, ID, Resolver, Query } from "type-graphql";
+import { buildSchema, ObjectType, Field, ID, Resolver, Query, Ctx, Mutation, Arg } from "type-graphql";
 import { ApolloServer } from "apollo-server";
-import { CreateDateColumn, Entity, PrimaryGeneratedColumn, Column, createConnection } from 'typeorm';
+import { CreateDateColumn, Entity, PrimaryGeneratedColumn, Column, createConnection, Connection } from 'typeorm';
+
 
 @Entity()
 class PostEntity {
@@ -33,45 +34,57 @@ class Post {
 class PostResolver {
 
   @Query(returns => [Post])
-  async posts(): Promise<Post[]> {
-    return [
-      {
-        id: "0",
-        created: new Date(),
-        content: '提供基于GraphQL API的数据查询及访问,「Hasura」获990万美元A轮...'
-      },
-      {
-        id: "1",
-        created: new Date(),
-        content: '为什么GraphQL是API的未来'
-      },
-      {
-        id: "2",
-        created: new Date(),
-        content: 'Netflix:我们为什么要将 GraphQL 引入前端架构?'
-      },
-    ]
+  async posts(
+    @Ctx() context: AppContext,
+  ): Promise<Post[]> {
+    const postRepository = context.connection.getRepository(PostEntity);
+    return await postRepository.find();
+  }
+
+  @Mutation(returns => Post)
+  async createPost(
+    @Ctx() context: AppContext,
+    @Arg('content') content: string,
+  ): Promise<Post> {
+    const postRepository = context.connection.getRepository(PostEntity);
+    const post = await postRepository.save({ content });
+    return post;
+  }
+
+  @Mutation(returns => Post)
+  async updatePost(
+    @Ctx() context: AppContext,
+    @Arg('postId') postId: string,
+    @Arg('content') content: string,
+  ): Promise<Post> {
+    const postRepository = context.connection.getRepository(PostEntity);
+    await postRepository.update(postId, { content });
+    return await postRepository.findOneOrFail(postId);
+  }
+
+  @Mutation(returns => String)
+  async deletePost(
+    @Ctx() context: AppContext,
+    @Arg('postId') postId: string
+  ): Promise<string> {
+    const postRepository = context.connection.getRepository(PostEntity);
+    await postRepository.delete(postId);
+    return postId;
   }
 }
+
+type AppContext = {
+  connection: Connection,
+};
 
 async function main() {
 
   try {
 
-    // const schema = await buildSchema({
-    //   resolvers: [PostResolver],
-    //   dateScalarMode: 'timestamp'
-    // });
-
-
-    // const server = new ApolloServer({
-    //   schema,
-    //   playground: true
-    // });
-
-    // const { url } = await server.listen(4444);
-
-    // console.log(`GraphQL Playground available at ${url}`);
+    const schema = await buildSchema({
+      resolvers: [PostResolver],
+      dateScalarMode: 'timestamp'
+    });
 
     const connection = await createConnection({
       type: 'mysql',
@@ -84,24 +97,20 @@ async function main() {
       entities: [PostEntity],
     });
 
-    console.log('Create connection success!');
+    const context: AppContext = {
+      connection
+    };
 
-    const postRepository = connection.getRepository(PostEntity);
+    const server = new ApolloServer({
+      context,
+      schema,
+      playground: true
+    });
 
-    // 新增
-    // const result = await postRepository.insert({ content: '提供基于GraphQL API的数据查询及访问,「Hasura」获990万美元A轮...' });
-    // console.log(`insert post success: ${JSON.stringify(result, null, 2)}`);
+    const { url } = await server.listen(4444);
 
-    // 修改
-    // const result = await postRepository
-    //   .update('fefc7d7c-4d33-45e2-b437-88db8e920f5d', { content: 'Hello GraphQL' });
-    // console.log(`update post success: ${JSON.stringify(result, null, 2)}`);
+    console.log(`GraphQL Playground available at ${url}`);
 
-    // 删除
-    const result = await postRepository
-      .delete('fefc7d7c-4d33-45e2-b437-88db8e920f5d');
-    console.log(`delete post success: ${JSON.stringify(result, null, 2)}`);
-    
   } catch (error) {
     console.error(error);
   }
